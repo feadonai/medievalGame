@@ -10,7 +10,7 @@ function database(){
     };
 
     this.connect = function(callback){
-          db = mysql.createConnection(config || process.env.DATABASE_URL);
+          db = mysql.createConnection(process.env.DATABASE_URL);
           db.connect(function(err){
             if (err){
               console.error("error connecting my sql: "+ err);
