@@ -239,11 +239,6 @@ io.on('connection', function(socket){
         bonusProducao24: Math.floor(Math.random()*10+1),
         bonusProducao25: Math.floor(Math.random()*10+1)
       }
-      console.log("num1: " + ListaNumerosRandom.num1);
-      console.log("TipoProducao com t grande1: " + ListaProducao.TipoProducao1);
-      console.log("TipoProducao com t grande2: " + ListaProducao.TipoProducao2);
-      console.log("BonusProducao1: " + ListaBonusProducao.bonusProducao1);
-      console.log("DecrescimoProducao: " + ListaDecrescimoProducao.decrescimoProducao1);
       while (randomNumber2 == randomNumber1){
         randomNumber2 = Math.floor(Math.random()*10 + (numTerritorios-10));
       }
@@ -385,10 +380,6 @@ io.on('connection', function(socket){
           DecrescimoProducao24: ListaDecrescimoProducao.decrescimoProducao24,
           DecrescimoProducao25: ListaDecrescimoProducao.decrescimoProducao25
         };
-        console.log("num1: " + PlayersOnlline[key].num1);
-        console.log("TipoProducao1: " + PlayersOnlline[key].TipoProducao1);
-        console.log("BonusProducao1: " + PlayersOnlline[key].BonusProducao1);
-        console.log("DecrescimoProducao: " + PlayersOnlline[key].DecrescimoProducao1);
         socket.emit("START_GAME_SUCCES", PlayersOnlline[key]);
         socket.broadcast.emit("START_GAME_SUCCES", PlayersOnlline[key]);
         }
@@ -401,12 +392,13 @@ io.on('connection', function(socket){
   });//end socket.on(START_GAME)
 
   socket.on("SOLICITAR_DADOS", function(pack){
+    console.log("pegando dados");
     var solicitarDados = {
       idPlayerWant: pack.idWant,
       idPlayerGive: pack.idGive,
       index: pack.index
     }
-    console.log("pegando dados");
+
     console.log("dados a serem enviados" + solicitarDados);
     socket.broadcast.emit("PEGAR_DADOS",solicitarDados)
   });//end socket.on(REQUIRE_DADOS)
