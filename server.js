@@ -126,7 +126,7 @@ io.on('connection', function(socket){
     console.log(numCanStart + "/" + quantPlayers);
     if (numCanStart >= 2){
       //var numTerritorios = pack.numTerritorios;
-      var numTerritorios = 9;
+      var numTerritorios = 16;//N PODE SER NOVE POIS SENAO DA NEGATIVO RANDOMNUMBER
 
       var randomNumber1 = Math.floor(Math.random()*10+ (numTerritorios-10));
       var randomNumber2 = Math.floor(Math.random()*10+ (numTerritorios-10));
