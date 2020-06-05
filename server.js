@@ -399,12 +399,13 @@ io.on('connection', function(socket){
       index: pack.index
     }
 
-    console.log("dados a serem enviados" + solicitarDados);
-    socket.broadcast.emit("PEGAR_DADOS",solicitarDados)
+
+    socket.broadcast.emit("PEGAR_DADOS",solicitarDados);
+    console.log("dados a serem enviados index" + solicitarDados.index);
   });//end socket.on(REQUIRE_DADOS)
 
   socket.on("ENVIAR_DADOS", function(pack){
-    console.log("enviar dados");
+    console.log("enviar dados index" + pack.index);
     var enviarDados = {
       idPara: pack.idPara,
       idDe: pack.idDe,
@@ -418,8 +419,9 @@ io.on('connection', function(socket){
       d1: pack.d1,
       d2: pack.d2
     }
+
+    socket.broadcast.emit("DADOS_ENVIADOS",enviarDados);
     console.log("ENVIANDO Dados");
-    socket.broadcast.emit("DADOS_ENVIADOS",enviarDados)
   });//end socket.on(REQUIRE_DADOS)
 
   socket.on("ENVIAR_DADOS_BATALHA", function(pack){
@@ -445,7 +447,7 @@ io.on('connection', function(socket){
       bread : pack.bread
     }
     console.log("ENVIANDO DADOS BATALHA PARA tds  por " + enviarDados.idDe);
-    socket.broadcast.emit("DADOS_ENVIADOS_BATALHA",enviarDados)
+    socket.broadcast.emit("DADOS_ENVIADOS_BATALHA",enviarDados);
   });//end socket.on(REQUIRE_DADOS_BATALHA)
 
   socket.on("ENVIAR_DADOS_CAPTURA", function(pack){
