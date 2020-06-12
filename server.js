@@ -392,38 +392,38 @@ io.on('connection', function(socket){
     }
   });//end socket.on(START_GAME)
 
-  socket.on("SOLICITAR_DADOS", function(pack){
+  //socket.on("SOLICITAR_DADOS", function(pack){
     //console.log("pegando dados");
-    var solicitarDados = {
-      idPlayerWant: pack.idWant,
-      idPlayerGive: pack.idGive,
-      index: pack.index
-    }
+  //  var solicitarDados = {
+  //    idPlayerWant: pack.idWant,
+  //    idPlayerGive: pack.idGive,
+  //    index: pack.index
+  //  }
 
 
-    socket.broadcast.emit("PEGAR_DADOS",solicitarDados);
+  //  socket.broadcast.emit("PEGAR_DADOS",solicitarDados);
   //  console.log("dados a serem enviados index" + solicitarDados.index);
-  });//end socket.on(REQUIRE_DADOS)
+//  });//end socket.on(REQUIRE_DADOS)
 
-  socket.on("ENVIAR_DADOS", function(pack){
+//  socket.on("ENVIAR_DADOS", function(pack){
     //console.log("enviar dados index" + pack.index);
-    var enviarDados = {
-      idPara: pack.idPara,
-      idDe: pack.idDe,
-      index: pack.index,
-      money: pack.money,
-      bread: pack.bread,
-      attackPower: pack.attackPower,
-      defencePower: pack.defencePower,
-      a1: pack.a1,
-      a2: pack.a2,
-      d1: pack.d1,
-      d2: pack.d2
-    }
+//    var enviarDados = {
+  //    idPara: pack.idPara,
+//idDe: pack.idDe,
+  //    index: pack.index,
+  //    money: pack.money,
+    //  bread: pack.bread,
+    //  attackPower: pack.attackPower,
+    //  defencePower: pack.defencePower,
+    //  a1: pack.a1,
+    //  a2: pack.a2,
+    //  d1: pack.d1,
+    //  d2: pack.d2
+  //  }
 
-    socket.broadcast.emit("DADOS_ENVIADOS",enviarDados);
+  //  socket.broadcast.emit("DADOS_ENVIADOS",enviarDados);
     //console.log("ENVIANDO Dados");
-  });//end socket.on(REQUIRE_DADOS)
+//  });//end socket.on(REQUIRE_DADOS)
 
   socket.on("ENVIAR_DADOS_BATALHA", function(pack){
 
@@ -487,8 +487,9 @@ io.on('connection', function(socket){
     socket.broadcast.emit("ACTION_MAP_RESULT", enviarDadosMap);
   });//end ACTION_MAP
 
+
   socket.on("DADOS_CLIENTE", function(pack){
-    console.log(pack.index + " sendo modificado");
+    //console.log(pack.index + " sendo modificado");
     Territorios[pack.index] = {
       index: pack.index,
       tag: pack.tag,
@@ -514,13 +515,12 @@ io.on('connection', function(socket){
       bonusProducao: pack.bonusProducao,
       decrescimoProducao: pack.decrescimoProducao
     };
-    console.log(Territorios[pack.index].index +" foi modificado:");
-    console.log("nameTerritorio: " +Territorios[pack.index].nameTerritorio);
-    console.log("nameUser: " +Territorios[pack.index].nameUser);
-    console.log("tagUser: " +Territorios[pack.index].tagUser);
-    console.log("tag territorio: " +Territorios[pack.index].tag);
+    //console.log(Territorios[pack.index].index +" foi modificado:");
+    //console.log("nameTerritorio: " +Territorios[pack.index].nameTerritorio);
+    //console.log("nameUser: " +Territorios[pack.index].nameUser);
+    //console.log("tagUser: " +Territorios[pack.index].tagUser);
+    //console.log("tag territorio: " +Territorios[pack.index].tag);
   });//end dados clientes
-
   socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
     console.log(" on CLIENTE_SOLICITA_DADOS");
     if (Territorios[pack.index].index == pack.index){
