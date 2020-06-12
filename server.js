@@ -525,7 +525,7 @@ io.on('connection', function(socket){
     console.log(" on CLIENTE_SOLICITA_DADOS");
     if (Territorios[pack.index].index == pack.index){
       console.log("enviando dados sobre o territorio " + Territorios[pack.index].index);
-      socket.emit("CLIENTE_RECEBE_DADOS", Territorio[pack.index]);
+      socket.emit("CLIENTE_RECEBE_DADOS", Territorios[pack.index]);
     }
 
 
