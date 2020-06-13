@@ -100,330 +100,256 @@ io.on('connection', function(socket){
     });
   });//end socket.on(LOGIN)
 
-  socket.on("START_GAME", function(pack){
-    console.log("solicitação para iniciar jogo..." + pack.startGame);
-    if(pack.startGame == "1"){
-      PlayersOnlline[pack.id] = {
-        id: PlayersOnlline[pack.id].id,
-        nameUser: PlayersOnlline[pack.id].nameUser,
-        state: "pre-lobby"
-        //canStart: pack.startGame
-      };
+  socket.on("TRY_START_GAME", function(pack){
+  //atualiza os estatos do cliente lobby/pre-lobby
+  console.log("tent inicar my_game");
+  if(pack.startGame == "1"){
+    PlayersOnlline[pack.id] = {
+      id: PlayersOnlline[pack.id].id,
+      nameUser: PlayersOnlline[pack.id].nameUser,
+      state: "pre-lobby"
+    };
+  }
+  else if(pack.startGame == "0"){
+    PlayersOnlline[pack.id] = {
+      id: PlayersOnlline[pack.id].id,
+      nameUser: PlayersOnlline[pack.id].nameUser,
+      state: "lobby"
+    };
+  }
+  //conta quantos clientes podem começar o jogo
+  var numCanStart = 0;
+  for (key in PlayersOnlline){
+    if (PlayersOnlline[key].state == "pre-lobby"){
+      numCanStart++;
     }
-    else if(pack.startGame == "0"){
-      PlayersOnlline[pack.id] = {
-        id: PlayersOnlline[pack.id].id,
-        nameUser: PlayersOnlline[pack.id].nameUser,
-        state: "lobby"
-        //canStart: pack.startGame
-      };
-    }
-    var numCanStart = 0;
-    for (key in PlayersOnlline){
-      if (PlayersOnlline[key].state == "pre-lobby"){
-        numCanStart++;
-      }
-    }
-    console.log(numCanStart + "/" + quantPlayers);
-    if (numCanStart >= 2){
-      //var numTerritorios = pack.numTerritorios;
-      var numTerritorios = 16;//N PODE SER NOVE POIS SENAO DA NEGATIVO RANDOMNUMBER
+  }
+  console.log(numCanStart + "/2");
+  //fim atualiza estatos clientes
 
-      var randomNumber1 = Math.floor(Math.random()*10+ (numTerritorios-10));
-      var randomNumber2 = Math.floor(Math.random()*10+ (numTerritorios-10));
+  if (numCanStart >= 2){
+    console.log("iniciando...");
+    var numTerritorios = 16;//trocar dado para ser pego via cliente
+    //define todos os numeros aleatorios (entre 1 e 10) a serem utilizados na distribuição dos territorios
+    var randomNumber1 = Math.floor(Math.random()*10+ (numTerritorios-10));
+    var randomNumber2 = Math.floor(Math.random()*10+ (numTerritorios-10));
+    var ListaNumerosRandom = {};
+    for (var i = 0; i < numTerritorios; i ++){
+      ListaNumerosRandom[i] = Math.floor(Math.random()*10+1);
+    }
+    var ListaProducao = {};
+    for (var i = 0; i < numTerritorios; i ++){
+      ListaProducao[i] = Math.floor(Math.random()*10+1);
+    }
+    var ListaDecrescimoProducao = {};
+    for (var i = 0; i < numTerritorios; i ++){
+      ListaDecrescimoProducao[i] = Math.floor(Math.random()*10+1);
+    }
+    var ListaBonusProducao = {};
+    for (var i = 0; i < numTerritorios; i ++){
+      ListaBonusProducao[i] = Math.floor(Math.random()*10+1);
+    }
+    while (randomNumber2 == randomNumber1){
+      randomNumber2 = Math.floor(Math.random()*10 + (numTerritorios-10));}//força randomNumber1 != randomNumber2
+    //fim da declaração dos numeros aleatorios
 
-      var ListaNumerosRandom = {
-        num1: Math.floor(Math.random()*10+1),
-        num2: Math.floor(Math.random()*10+1),
-        num3: Math.floor(Math.random()*10+1),
-        num4: Math.floor(Math.random()*10+1),
-        num5: Math.floor(Math.random()*10+1),
-        num6: Math.floor(Math.random()*10+1),
-        num7: Math.floor(Math.random()*10+1),
-        num8: Math.floor(Math.random()*10+1),
-        num9: Math.floor(Math.random()*10+1),
-        num10: Math.floor(Math.random()*10+1),
-        num11: Math.floor(Math.random()*10+1),
-        num12: Math.floor(Math.random()*10+1),
-        num13: Math.floor(Math.random()*10+1),
-        num14: Math.floor(Math.random()*10+1),
-        num15: Math.floor(Math.random()*10+1),
-        num16: Math.floor(Math.random()*10+1),
-        num17: Math.floor(Math.random()*10+1),
-        num18: Math.floor(Math.random()*10+1),
-        num19: Math.floor(Math.random()*10+1),
-        num20: Math.floor(Math.random()*10+1),
-        num21: Math.floor(Math.random()*10+1),
-        num22: Math.floor(Math.random()*10+1),
-        num23: Math.floor(Math.random()*10+1),
-        num24: Math.floor(Math.random()*10+1),
-        num25: Math.floor(Math.random()*10+1)
-      }
-      var ListaProducao = {
-        TipoProducao1: Math.floor(Math.random()*10+1),
-        TipoProducao2: Math.floor(Math.random()*10+1),
-        TipoProducao3: Math.floor(Math.random()*10+1),
-        TipoProducao4: Math.floor(Math.random()*10+1),
-        TipoProducao5: Math.floor(Math.random()*10+1),
-        TipoProducao6: Math.floor(Math.random()*10+1),
-        TipoProducao7: Math.floor(Math.random()*10+1),
-        TipoProducao8: Math.floor(Math.random()*10+1),
-        TipoProducao9: Math.floor(Math.random()*10+1),
-        TipoProducao10: Math.floor(Math.random()*10+1),
-        TipoProducao11: Math.floor(Math.random()*10+1),
-        TipoProducao12: Math.floor(Math.random()*10+1),
-        TipoProducao13: Math.floor(Math.random()*10+1),
-        TipoProducao14: Math.floor(Math.random()*10+1),
-        TipoProducao15: Math.floor(Math.random()*10+1),
-        TipoProducao16: Math.floor(Math.random()*10+1),
-        TipoProducao17: Math.floor(Math.random()*10+1),
-        TipoProducao18: Math.floor(Math.random()*10+1),
-        TipoProducao19: Math.floor(Math.random()*10+1),
-        TipoProducao20: Math.floor(Math.random()*10+1),
-        TipoProducao21: Math.floor(Math.random()*10+1),
-        TipoProducao22: Math.floor(Math.random()*10+1),
-        TipoProducao23: Math.floor(Math.random()*10+1),
-        TipoProducao24: Math.floor(Math.random()*10+1),
-        TipoProducao25: Math.floor(Math.random()*10+1)
-      }
-      var ListaDecrescimoProducao = {
-        decrescimoProducao1: Math.floor(Math.random()*10+1),
-        decrescimoProducao2: Math.floor(Math.random()*10+1),
-        decrescimoProducao3: Math.floor(Math.random()*10+1),
-        decrescimoProducao4: Math.floor(Math.random()*10+1),
-        decrescimoProducao5: Math.floor(Math.random()*10+1),
-        decrescimoProducao6: Math.floor(Math.random()*10+1),
-        decrescimoProducao7: Math.floor(Math.random()*10+1),
-        decrescimoProducao8: Math.floor(Math.random()*10+1),
-        decrescimoProducao9: Math.floor(Math.random()*10+1),
-        decrescimoProducao10: Math.floor(Math.random()*10+1),
-        decrescimoProducao11: Math.floor(Math.random()*10+1),
-        decrescimoProducao12: Math.floor(Math.random()*10+1),
-        decrescimoProducao13: Math.floor(Math.random()*10+1),
-        decrescimoProducao14: Math.floor(Math.random()*10+1),
-        decrescimoProducao15: Math.floor(Math.random()*10+1),
-        decrescimoProducao16: Math.floor(Math.random()*10+1),
-        decrescimoProducao17: Math.floor(Math.random()*10+1),
-        decrescimoProducao18: Math.floor(Math.random()*10+1),
-        decrescimoProducao19: Math.floor(Math.random()*10+1),
-        decrescimoProducao20: Math.floor(Math.random()*10+1),
-        decrescimoProducao21: Math.floor(Math.random()*10+1),
-        decrescimoProducao22: Math.floor(Math.random()*10+1),
-        decrescimoProducao23: Math.floor(Math.random()*10+1),
-        decrescimoProducao24: Math.floor(Math.random()*10+1),
-        decrescimoProducao25: Math.floor(Math.random()*10+1)
-      }
-      var ListaBonusProducao = {
-        bonusProducao1: Math.floor(Math.random()*10+1),
-        bonusProducao2: Math.floor(Math.random()*10+1),
-        bonusProducao3: Math.floor(Math.random()*10+1),
-        bonusProducao4: Math.floor(Math.random()*10+1),
-        bonusProducao5: Math.floor(Math.random()*10+1),
-        bonusProducao6: Math.floor(Math.random()*10+1),
-        bonusProducao7: Math.floor(Math.random()*10+1),
-        bonusProducao8: Math.floor(Math.random()*10+1),
-        bonusProducao9: Math.floor(Math.random()*10+1),
-        bonusProducao10: Math.floor(Math.random()*10+1),
-        bonusProducao11: Math.floor(Math.random()*10+1),
-        bonusProducao12: Math.floor(Math.random()*10+1),
-        bonusProducao13: Math.floor(Math.random()*10+1),
-        bonusProducao14: Math.floor(Math.random()*10+1),
-        bonusProducao15: Math.floor(Math.random()*10+1),
-        bonusProducao16: Math.floor(Math.random()*10+1),
-        bonusProducao17: Math.floor(Math.random()*10+1),
-        bonusProducao18: Math.floor(Math.random()*10+1),
-        bonusProducao19: Math.floor(Math.random()*10+1),
-        bonusProducao20: Math.floor(Math.random()*10+1),
-        bonusProducao21: Math.floor(Math.random()*10+1),
-        bonusProducao22: Math.floor(Math.random()*10+1),
-        bonusProducao23: Math.floor(Math.random()*10+1),
-        bonusProducao24: Math.floor(Math.random()*10+1),
-        bonusProducao25: Math.floor(Math.random()*10+1)
-      }
-      while (randomNumber2 == randomNumber1){
-        randomNumber2 = Math.floor(Math.random()*10 + (numTerritorios-10));
-      }
-      var index = 0;
-      for (key in PlayersOnlline){
-        index++;
-        if (index == 1){
-          PlayersOnlline[key]={
-            id: PlayersOnlline[key].id,
-            nameUser: PlayersOnlline[key].nameUser,
-            state: "math",
-            //canStart: "1",
-            tag: index,
-            territorio: randomNumber1,
-          };
-          console.log(PlayersOnlline[key].nameUser + ":player1");
-        }else if (index == 2){
-          PlayersOnlline[key]={
-            id: PlayersOnlline[key].id,
-            nameUser: PlayersOnlline[key].nameUser,
-            state: "math",
-            //canStart: "1",
-            tag: index,
-            territorio: randomNumber2,
-          };
-          console.log(PlayersOnlline[key].nameUser + ":player2");
+    //inicio distribuiçao dos territorios e tags players
+    console.log("gerando territorios...");
+    for (var i = 0; i < numTerritorios; i ++){
+      if (ListaNumerosRandom[i] <= 4){//40% para fazenda
+        var tipoProducao = "comida";
+        if (ListaProducao[i] >= 5){
+          tipoProducao = "comida" //define como comida(50%)
+        }else if (ListaProducao[i] < 5){
+          tipoProducao = "moeda";
+        }//define comoo moeda(50%)
+        var bonus = 1;
+        if (Math.round(ListaBonusProducao[i] / 2) == 0){
+          bonus = 1;
+        }else if (1==1){
+          bonus = Math.round(ListaBonusProducao[i] / 2)
         }
-        PlayersOnlline[key]={
-          id: PlayersOnlline[key].id,
-          nameUser: PlayersOnlline[key].nameUser,
-          state: PlayersOnlline[key].state,
-          //canStart: PlayersOnlline[key].canStart,
-          tag: PlayersOnlline[key].tag,
+        var decrescimo =1;
+        if (Math.round(ListaDecrescimoProducao[i] / 2) == 0){
+          decrescimo = 1;
+        }else if (1 ==1){
+          decrescimo = Math.round(ListaDecrescimoProducao[i] / 3);
+        }
+        var defence = (((bonus*2)-decrescimo)*100 <= 0);
+        if (defence <= 0){
+          defence = 100;
+        }
+        Territorios[i] = {
           numTerritorios: numTerritorios,
-          territorio: PlayersOnlline[key].territorio,
-          num1: ListaNumerosRandom.num1,
-          num2: ListaNumerosRandom.num2,
-          num3: ListaNumerosRandom.num3,
-          num4: ListaNumerosRandom.num4,
-          num5: ListaNumerosRandom.num5,
-          num6: ListaNumerosRandom.num6,
-          num7: ListaNumerosRandom.num7,
-          num8: ListaNumerosRandom.num8,
-          num9: ListaNumerosRandom.num9,
-          num10: ListaNumerosRandom.num10,
-          num11: ListaNumerosRandom.num11,
-          num12: ListaNumerosRandom.num12,
-          num13: ListaNumerosRandom.num13,
-          num14: ListaNumerosRandom.num14,
-          num15: ListaNumerosRandom.num15,
-          num16: ListaNumerosRandom.num16,
-          num17: ListaNumerosRandom.num17,
-          num18: ListaNumerosRandom.num18,
-          num19: ListaNumerosRandom.num19,
-          num20: ListaNumerosRandom.num20,
-          num21: ListaNumerosRandom.num21,
-          num21: ListaNumerosRandom.num21,
-          num22: ListaNumerosRandom.num22,
-          num23: ListaNumerosRandom.num23,
-          num24: ListaNumerosRandom.num24,
-          num25: ListaNumerosRandom.num25,
+          tipo: "bot",
+          index: i,
+          tag: "fazenda",
+          tagUser: "",
+          nameUser: "",
+          IDuser: "",
+          nameTerritorio: ("fazenda " + (i+1)),
 
-
-          TipoProducao1: ListaProducao.TipoProducao1,
-          TipoProducao2: ListaProducao.TipoProducao2,
-          TipoProducao3: ListaProducao.TipoProducao3,
-          TipoProducao4: ListaProducao.TipoProducao4,
-          TipoProducao5: ListaProducao.TipoProducao5,
-          TipoProducao6: ListaProducao.TipoProducao6,
-          TipoProducao7: ListaProducao.TipoProducao7,
-          TipoProducao8: ListaProducao.TipoProducao8,
-          TipoProducao9: ListaProducao.TipoProducao9,
-          TipoProducao10: ListaProducao.TipoProducao10,
-          TipoProducao11: ListaProducao.TipoProducao11,
-          TipoProducao12: ListaProducao.TipoProducao12,
-          TipoProducao13: ListaProducao.TipoProducao13,
-          TipoProducao14: ListaProducao.TipoProducao14,
-          TipoProducao15: ListaProducao.TipoProducao15,
-          TipoProducao16: ListaProducao.TipoProducao16,
-          TipoProducao17: ListaProducao.TipoProducao17,
-          TipoProducao18: ListaProducao.TipoProducao18,
-          TipoProducao19: ListaProducao.TipoProducao19,
-          TipoProducao20: ListaProducao.TipoProducao20,
-          TipoProducao21: ListaProducao.TipoProducao21,
-          TipoProducao22: ListaProducao.TipoProducao22,
-          TipoProducao23: ListaProducao.TipoProducao23,
-          TipoProducao24: ListaProducao.TipoProducao24,
-          TipoProducao25: ListaProducao.TipoProducao25,
-
-          BonusProducao1: ListaBonusProducao.bonusProducao1,
-          BonusProducao2:ListaBonusProducao.bonusProducao2,
-          BonusProducao3:ListaBonusProducao.bonusProducao3,
-          BonusProducao4:ListaBonusProducao.bonusProducao4,
-          BonusProducao5:ListaBonusProducao.bonusProducao5,
-          BonusProducao6:ListaBonusProducao.bonusProducao6,
-          BonusProducao7:ListaBonusProducao.bonusProducao7,
-          BonusProducao8:ListaBonusProducao.bonusProducao8,
-          BonusProducao9:ListaBonusProducao.bonusProducao9,
-          BonusProducao10:ListaBonusProducao.bonusProducao10,
-          BonusProducao11: ListaBonusProducao.bonusProducao11,
-          BonusProducao12:ListaBonusProducao.bonusProducao12,
-          BonusProducao13:ListaBonusProducao.bonusProducao13,
-          BonusProducao14:ListaBonusProducao.bonusProducao14,
-          BonusProducao15:ListaBonusProducao.bonusProducao15,
-          BonusProducao16:ListaBonusProducao.bonusProducao16,
-          BonusProducao17:ListaBonusProducao.bonusProducao17,
-          BonusProducao18:ListaBonusProducao.bonusProducao18,
-          BonusProducao19:ListaBonusProducao.bonusProducao19,
-          BonusProducao20:ListaBonusProducao.bonusProducao20,
-          BonusProducao21: ListaBonusProducao.bonusProducao21,
-          BonusProducao22:ListaBonusProducao.bonusProducao22,
-          BonusProducao23:ListaBonusProducao.bonusProducao23,
-          BonusProducao24:ListaBonusProducao.bonusProducao24,
-          BonusProducao25:ListaBonusProducao.bonusProducao25,
-
-          DecrescimoProducao1: ListaDecrescimoProducao.decrescimoProducao1,
-          DecrescimoProducao2: ListaDecrescimoProducao.decrescimoProducao2,
-          DecrescimoProducao3: ListaDecrescimoProducao.decrescimoProducao3,
-          DecrescimoProducao4: ListaDecrescimoProducao.decrescimoProducao4,
-          DecrescimoProducao5: ListaDecrescimoProducao.decrescimoProducao5,
-          DecrescimoProducao6: ListaDecrescimoProducao.decrescimoProducao6,
-          DecrescimoProducao7: ListaDecrescimoProducao.decrescimoProducao7,
-          DecrescimoProducao8: ListaDecrescimoProducao.decrescimoProducao8,
-          DecrescimoProducao9: ListaDecrescimoProducao.decrescimoProducao9,
-          DecrescimoProducao10: ListaDecrescimoProducao.decrescimoProducao10,
-          DecrescimoProducao11: ListaDecrescimoProducao.decrescimoProducao11,
-          DecrescimoProducao12: ListaDecrescimoProducao.decrescimoProducao12,
-          DecrescimoProducao13: ListaDecrescimoProducao.decrescimoProducao13,
-          DecrescimoProducao14: ListaDecrescimoProducao.decrescimoProducao14,
-          DecrescimoProducao15: ListaDecrescimoProducao.decrescimoProducao15,
-          DecrescimoProducao16: ListaDecrescimoProducao.decrescimoProducao16,
-          DecrescimoProducao17: ListaDecrescimoProducao.decrescimoProducao17,
-          DecrescimoProducao18: ListaDecrescimoProducao.decrescimoProducao18,
-          DecrescimoProducao19: ListaDecrescimoProducao.decrescimoProducao19,
-          DecrescimoProducao20: ListaDecrescimoProducao.decrescimoProducao20,
-          DecrescimoProducao21: ListaDecrescimoProducao.decrescimoProducao21,
-          DecrescimoProducao22: ListaDecrescimoProducao.decrescimoProducao22,
-          DecrescimoProducao23: ListaDecrescimoProducao.decrescimoProducao23,
-          DecrescimoProducao24: ListaDecrescimoProducao.decrescimoProducao24,
-          DecrescimoProducao25: ListaDecrescimoProducao.decrescimoProducao25
-        };
-        socket.emit("START_GAME_SUCCES", PlayersOnlline[key]);
-        socket.broadcast.emit("START_GAME_SUCCES", PlayersOnlline[key]);
-        }
-    }else{
-      for (key in PlayersOnlline){
-        socket.emit("START_GAME_FAILED", PlayersOnlline[key]);
-        socket.broadcast.emit("START_GAME_FAILED", PlayersOnlline[key]);
+          a1: "",
+          a2: "",
+          d1: "",
+          d2: "",
+          attack: "",
+          defence: defence,
+          money: "",
+          bread: "",
+          levelFazenda: "",
+          levelInposto: "",
+          levelArmazemComida: "",
+          levelArmazemMoeda: "",
+          levelEspiao: "",
+          tipoProducao: tipoProducao,
+          bonusProducao: bonus,
+          decrescimoProducao: decrescimo
+        }//define territorio[i] como fazenda e seta sua propriedades
       }
-    }
-  });//end socket.on(START_GAME)
+      else if ((ListaNumerosRandom[i] > 4) && (ListaNumerosRandom[i] <= 7)){//30% para neutro
+        var moeda = (Math.floor(Math.random()*10+1) * 100)
+        var bread = (Math.floor(Math.random()*10+1) * 100)
+        var defesa = ((moeda + bread) * 2)
+        Territorios[i] = {
+          numTerritorios: numTerritorios,
+          tipo: "bot",
+          index: i,
+          tag: "neutro",
+          tagUser: "",
+          nameUser: "",
+          IDuser: "",
+          nameTerritorio: ("neutro " + (i+1)),
 
-  //socket.on("SOLICITAR_DADOS", function(pack){
-    //console.log("pegando dados");
-  //  var solicitarDados = {
-  //    idPlayerWant: pack.idWant,
-  //    idPlayerGive: pack.idGive,
-  //    index: pack.index
-  //  }
+          a1: "",
+          a2: "",
+          d1: "",
+          d2: "",
+          attack: 0,
+          defence: defesa,
+          money: moeda,
+          bread: bread,
+          levelFazenda: "",
+          levelInposto: "",
+          levelArmazemComida: "",
+          levelArmazemMoeda: "",
+          levelEspiao: "",
+          tipoProducao: "",
+          bonusProducao: "",
+          decrescimoProducao: ""
+        };
+      }
+      else if (ListaNumerosRandom[i] > 7){//30% para sem dono
+        var moeda = Math.floor(Math.random()*10+1) * 10;
+        var bread = Math.floor(Math.random()*10+1) * 10;
+        var defesa = (moeda + bread) * 3;
+        Territorios[i] = {
+          numTerritorios: numTerritorios,
+          tipo: "bot",
+          index: i,
+          tag: "semDono",
+          tagUser: "",
+          nameUser: "",
+          IDuser: "",
+          nameTerritorio: ("Sem Dono " + (i+1)),
 
+          a1: "",
+          a2: "",
+          d1: "",
+          d2: "",
+          attack: "",
+          defence: defesa,
+          money: moeda,
+          bread: bread,
+          levelFazenda: 0,
+          levelInposto: 0,
+          levelArmazemComida: 0,
+          levelArmazemMoeda: 0,
+          levelEspiao: 0,
+          tipoProducao: "",
+          bonusProducao: "",
+          decrescimoProducao: ""}
+      }}//define tds as propriedades dos territorios
+    var index = 0;
+    for (key in PlayersOnlline){
+      index++;
+      PlayersOnlline[key]={
+        id: PlayersOnlline[key].id,
+        nameUser: PlayersOnlline[key].nameUser,
+        state: "math",
+        tag: index,
+      };//define tag dos players
+      if (index == 1){
+        Territorios[randomNumber1] = {
+          numTerritorios: numTerritorios,
+          tipo: "player",
+          index: randomNumber1,
+          tag: "player1",
+          tagUser: "player1",
+          nameUser: PlayersOnlline[key].nameUser,
+          IDuser: PlayersOnlline[key].id,
+          state: "math",
+          nameTerritorio: PlayersOnlline[key].nameUser,
 
-  //  socket.broadcast.emit("PEGAR_DADOS",solicitarDados);
-  //  console.log("dados a serem enviados index" + solicitarDados.index);
-//  });//end socket.on(REQUIRE_DADOS)
+          a1: 0,
+          a2: 0,
+          d1: 0,
+          d2: 0,
+          attack: 0,
+          defence: 0,
+          money: 50,
+          bread: 50,
+          levelFazenda: 0,
+          levelInposto: 0,
+          levelArmazemComida: 0,
+          levelArmazemMoeda: 0,
+          levelEspiao: 0,
+          tipoProducao: "",
+          bonusProducao: "",
+          decrescimoProducao: ""
+        }
+      }else if (index == 2){
+        Territorios[randomNumber2] = {
+          numTerritorios: numTerritorios,
+          tipo: "player",
+          index: randomNumber2,
+          tag: "player2",
+          tagUser: "player2",
+          nameUser: PlayersOnlline[key].nameUser,
+          IDuser: PlayersOnlline[key].id,
+          nameTerritorio: PlayersOnlline[key].nameUser,
 
-//  socket.on("ENVIAR_DADOS", function(pack){
-    //console.log("enviar dados index" + pack.index);
-//    var enviarDados = {
-  //    idPara: pack.idPara,
-//idDe: pack.idDe,
-  //    index: pack.index,
-  //    money: pack.money,
-    //  bread: pack.bread,
-    //  attackPower: pack.attackPower,
-    //  defencePower: pack.defencePower,
-    //  a1: pack.a1,
-    //  a2: pack.a2,
-    //  d1: pack.d1,
-    //  d2: pack.d2
-  //  }
+          a1: 0,
+          a2: 0,
+          d1: 0,
+          d2: 0,
+          attack: 0,
+          defence: 0,
+          money: 50,
+          bread: 50,
+          levelFazenda: 0,
+          levelInposto: 0,
+          levelArmazemComida: 0,
+          levelArmazemMoeda: 0,
+          levelEspiao: 0,
+          tipoProducao: "",
+          bonusProducao: "",
+          decrescimoProducao: ""
+        }}}//define territorios dos jogadores
+    //fim distribuiçao dos territorios e tags players
+    for (var i = 0; i < numTerritorios; i ++){
+      console.log("enviando dados..." + i);
+      socket.emit("START_GAME_SUCESS", Territorios[i]);
+      socket.broadcast.emit("START_GAME_SUCESS", Territorios[i]);
+    }//enivio dos dados iniciais aos clientes
+//emite sucesso e envia dados em start game para tds jogadores
+  }else{
+    for (key in PlayersOnlline){
+      socket.emit("START_GAME_FAILED", PlayersOnlline[key]);
+      socket.broadcast.emit("START_GAME_FAILED", PlayersOnlline[key]);
+    }}//emitir falha em start game para tds os jogadores
+  });//end start_game_sucess
 
-  //  socket.broadcast.emit("DADOS_ENVIADOS",enviarDados);
-    //console.log("ENVIANDO Dados");
-//  });//end socket.on(REQUIRE_DADOS)
 
   socket.on("ENVIAR_DADOS_BATALHA", function(pack){
 
@@ -490,7 +416,16 @@ io.on('connection', function(socket){
 
   socket.on("DADOS_CLIENTE", function(pack){
     //console.log(pack.index + " sendo modificado");
+    if (Territorios[pack.index].tagUser == pack.tagUser){
+
+    }else{
+      DadosCaptura = {
+
+      }
+      socket.broadcast.emit("INFORMAR_CAPTURA",DadosCaptura);
+    }
     Territorios[pack.index] = {
+      tipo: "player",
       index: pack.index,
       tag: pack.tag,
       tagUser: pack.tagUser,
@@ -515,12 +450,7 @@ io.on('connection', function(socket){
       bonusProducao: pack.bonusProducao,
       decrescimoProducao: pack.decrescimoProducao
     };
-    //console.log(Territorios[pack.index].index +" foi modificado:");
-    //console.log("nameTerritorio: " +Territorios[pack.index].nameTerritorio);
-    //console.log("nameUser: " +Territorios[pack.index].nameUser);
-    //console.log("tagUser: " +Territorios[pack.index].tagUser);
-    //console.log("tag territorio: " +Territorios[pack.index].tag);
-  });//end dados clientes
+  });//end dados clientes. A cada 1 seg os clientes atualizam os dados dos territorios
   socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
     console.log(" on CLIENTE_SOLICITA_DADOS");
     if (Territorios[pack.index].index == pack.index){
@@ -529,7 +459,7 @@ io.on('connection', function(socket){
     }
 
 
-  }); //end cliente_solicita_dados
+  }); //end cliente_solicita_dados. Envia tds os dados de um index para o respectivo cliente
 
 
   socket.on("disconnect", function(){
