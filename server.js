@@ -317,6 +317,7 @@ io.on('connection', function(socket){
           tagUser: "player2",
           nameUser: PlayersOnlline[key].nameUser,
           IDuser: PlayersOnlline[key].id,
+          state: "math",
           nameTerritorio: PlayersOnlline[key].nameUser,
 
           a1: 0,
