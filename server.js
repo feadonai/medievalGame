@@ -268,8 +268,7 @@ io.on('connection', function(socket){
           levelEspiao: 0,
           tipoProducao: "",
           bonusProducao: "",
-          decrescimoProducao: ""}
-      }}//define tds as propriedades dos territorios
+          decrescimoProducao: ""}}}//define tds as propriedades dos territorios
     var index = 0;
     for (key in PlayersOnlline){
       index++;
@@ -335,14 +334,12 @@ io.on('connection', function(socket){
           levelEspiao: 0,
           tipoProducao: "",
           bonusProducao: "",
-          decrescimoProducao: ""
-        }}}//define territorios dos jogadores
+          decrescimoProducao: ""}}}//define territorios dos jogadores
     //fim distribuiçao dos territorios e tags players
     for (var i = 0; i < numTerritorios; i ++){
       console.log("enviando dados..." + i);
       socket.emit("START_GAME_SUCESS", Territorios[i]);
-      socket.broadcast.emit("START_GAME_SUCESS", Territorios[i]);
-    }//enivio dos dados iniciais aos clientes
+      socket.broadcast.emit("START_GAME_SUCESS", Territorios[i]);}//enivio dos dados iniciais aos clientes
 //emite sucesso e envia dados em start game para tds jogadores
   }else{
     for (key in PlayersOnlline){
@@ -350,82 +347,10 @@ io.on('connection', function(socket){
       socket.broadcast.emit("START_GAME_FAILED", PlayersOnlline[key]);
     }}//emitir falha em start game para tds os jogadores
   });//end start_game_sucess
-
-
-  socket.on("ENVIAR_DADOS_BATALHA", function(pack){
-
-    var enviarDados = {
-      idDe: pack.idDe,
-      indexDefesa: pack.indexDefesa,
-      indexAtaque: pack.indexAtaque,
-      newTag : pack.newTag,
-      newName : pack.newName,
-      isCaptura : pack.isCaptura,
-      isVitoria : pack.isVitoria,
-      attackPower : pack.attackPower,
-      a1Ant : pack.a1Ant,
-      a2Ant : pack.a2Ant,
-      d1Ant : pack.d1Ant,
-      d2Ant : pack.d2Ant,
-      a1 : pack.a1,
-      a2 : pack.a2,
-      d1 : pack.d1,
-      d2 : pack.d2,
-      money : pack.money,
-      bread : pack.bread
-    }
-    //console.log("ENVIANDO DADOS BATALHA PARA tds  por " + enviarDados.idDe);
-    socket.broadcast.emit("DADOS_ENVIADOS_BATALHA",enviarDados);
-  });//end socket.on(REQUIRE_DADOS_BATALHA)
-
-  socket.on("ENVIAR_DADOS_CAPTURA", function(pack){
-
-    var enviarDados = {
-      indexPara: pack.indexPara,
-      levelFazenda: pack.levelFazenda,
-      levelImpostos : pack.levelImpostos,
-      levelArmazemFazenda : pack.levelArmazemFazenda,
-      levelArmazemImposto : pack.levelArmazemImposto,
-      levelEspiao : pack.levelEspiao
-    }
-
-    socket.broadcast.emit("DADOS_ENVIADOS_CAPTURA",enviarDados)
-  });//end socket.on(REQUIRE_DADOS_BATALHA)
-  socket.on("ACTION_MAP", function(pack){
-    //console.log("Action map");
-    var enviarDadosMap = {
-      indexDe: pack.indexDe,
-      indexPara: pack.indexPara,
-      timeTrip: pack.timeTrip,
-      tagPrefab: pack.tagPrefab,
-      posX: pack.posX,
-      posY: pack.posY,
-      posZ: pack.posZ,
-      attackPower: pack.attackPower,
-      defencePower: pack.defencePower,
-      a1: pack.a1,
-      a2: pack.a2,
-      d1: pack.d1,
-      d2: pack.d2,
-      money: pack.money,
-      bread: pack.bread,
-      ramdomNumber: pack.ramdomNumber
-    }
-    socket.broadcast.emit("ACTION_MAP_RESULT", enviarDadosMap);
-  });//end ACTION_MAP
-
-
   socket.on("DADOS_CLIENTE", function(pack){
     //console.log(pack.index + " sendo modificado");
     if (Territorios[pack.index].tagUser == pack.tagUser){
-
-    }else{
-      DadosCaptura = {
-
-      }
-      socket.broadcast.emit("INFORMAR_CAPTURA",DadosCaptura);
-    }
-    Territorios[pack.index] = {
+      Territorios[pack.index] = {
       tipo: "player",
       index: pack.index,
       tag: pack.tag,
@@ -451,6 +376,7 @@ io.on('connection', function(socket){
       bonusProducao: pack.bonusProducao,
       decrescimoProducao: pack.decrescimoProducao
     };
+    }
   });//end dados clientes. A cada 1 seg os clientes atualizam os dados dos territorios
   socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
     console.log(" on CLIENTE_SOLICITA_DADOS");
@@ -461,6 +387,133 @@ io.on('connection', function(socket){
 
 
   }); //end cliente_solicita_dados. Envia tds os dados de um index para o respectivo cliente
+
+
+
+  socket.on("ENVIAR_DADOS_BATALHA", function(pack){
+    console.log("on Enviar dadosBatalha.  dados batalha recebido");
+    if (Territorios[pack.indexDefesa].tipo == "player"){
+      console.log("batalha em player");
+      var enviarDados = {
+        idPara: Territorios[pack.indexDefesa].IDuser,
+        indexDefesa: pack.indexDefesa,
+        indexAtaque: pack.indexAtaque,
+        isCaptura: pack.isCaptura,
+        isVitoria: pack.isVitoria,
+        nameUserAtacante : Territorios[pack.indexAtaque].nameUser,
+        nameAtacante : Territorios[pack.indexAtaque].nameTerritorio,
+        attackPower : pack.attackPower,
+        a1Ant : pack.a1Ant,
+        a2Ant : pack.a2Ant,
+        d1Ant : pack.d1Ant,
+        d2Ant : pack.d2Ant,
+        a1 : pack.a1,
+        a2 : pack.a2,
+        d1 : pack.d1,
+        d2 : pack.d2,
+        money : pack.money,
+        bread : pack.bread
+      }
+      console.log("enviando dados batalha para player");
+      socket.broadcast.emit("DADOS_ENVIADOS_BATALHA",enviarDados);
+    }
+    if (pack.isCaptura = "1" && pack.isVitoria == "1"){
+      console.log("foi captura e vitoria");
+      var newTag;
+      if (Territorios[pack.indexDefesa].tipo == "bot"){
+        if (Territorios[pack.indexDefesa].tag == "semDono"){
+          newTag = Territorios[pack.indexAtaque].tagUser;
+        }else if (Territorios[pack.indexDefesa].tag == "fazenda"){
+          if (Territorios[pack.indexAtaque].tagUser == "player1"){
+            newTag = "fazendaPlayer1"
+          }else if (Territorios[pack.indexAtaque].tagUser == "player2"){
+            newTag = "fazendaPlayer2"
+          }
+        }
+      }else if (Territorios[pack.indexDefesa].tipo == "player"){
+        if (Territorios[pack.indexDefesa].tag == "player1" || Territorios[pack.indexDefesa].tag == "player2"){
+          newTag = Territorios[pack.indexAtaque].tagUser;
+        }else if (Territorios[pack.indexDefesa].tag == "fazendaPlayer1" || Territorios[pack.indexDefesa].tag == "fazendaPlayer2"){
+          if (Territorios[pack.indexAtaque].tagUser == "player1"){
+            newTag = "fazendaPlayer1"
+          }else if (Territorios[pack.indexAtaque].tagUser == "player2"){
+            newTag = "fazendaPlayer2"
+          }
+        }
+      }
+      console.log("new tag eh :" + newTag);
+      Territorios[pack.indexDefesa] = {
+        tipo: "player",
+        index: Territorios[pack.indexDefesa].index,
+        tag: newTag,
+        tagUser: Territorios[pack.indexAtaque].tagUser,
+        nameUser: Territorios[pack.indexAtaque].nameUser,
+        IDuser: Territorios[pack.indexAtaque].IDuser,
+        nameTerritorio: pack.newNameTerritorio,
+
+        a1: pack.a1,
+        a2: pack.a2,
+        d1: pack.d1,
+        d2: pack.d2,
+        attack: "",
+        defence: "",
+        money: pack.money,
+        bread: pack.bread,
+        levelFazenda: Territorios[enviarDados.indexDefesa].levelFazenda,
+        levelInposto: Territorios[enviarDados.indexDefesa].levelImposto,
+        levelArmazemComida: Territorios[enviarDados.indexDefesa].levelArmazemComida,
+        levelArmazemMoeda: Territorios[enviarDados.indexDefesa].levelArmazemMoeda,
+        levelEspiao: Territorios[enviarDados.indexDefesa].levelEspiao,
+        tipoProducao: Territorios[enviarDados.indexDefesa].tipoProducao,
+        bonusProducao: Territorios[enviarDados.indexDefesa].bonusProducao,
+        decrescimoProducao: Territorios[enviarDados.indexDefesa].decrescimoProducao
+    }
+      console.log("enviando dados change territorio");
+      socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[enviarDados.indexDefesa]);
+    }
+    //console.log("ENVIANDO DADOS BATALHA PARA tds  por " + enviarDados.idDe);
+
+  });//end socket.on(ENVIAR_DADOS_BATALHA). caço mude territorio envia a todos as mudanças + player sobre derrota
+
+
+
+//  socket.on("ENVIAR_DADOS_CAPTURA", function(pack){
+
+  //  var enviarDados = {
+  //    indexPara: pack.indexPara,
+  //    levelFazenda: pack.levelFazenda,
+  //    levelImpostos : pack.levelImpostos,
+  //    levelArmazemFazenda : pack.levelArmazemFazenda,
+      //levelArmazemImposto : pack.levelArmazemImposto,
+    //  levelEspiao : pack.levelEspiao
+  //  }
+//
+  //  socket.broadcast.emit("DADOS_ENVIADOS_CAPTURA",enviarDados)
+//  });//end socket.on(REQUIRE_DADOS_BATALHA)
+
+  socket.on("ACTION_MAP", function(pack){
+    //console.log("Action map");
+    var enviarDadosMap = {
+      indexDe: pack.indexDe,
+      indexPara: pack.indexPara,
+      timeTrip: pack.timeTrip,
+      tagPrefab: pack.tagPrefab,
+      posX: pack.posX,
+      posY: pack.posY,
+      posZ: pack.posZ,
+      attackPower: pack.attackPower,
+      defencePower: pack.defencePower,
+      a1: pack.a1,
+      a2: pack.a2,
+      d1: pack.d1,
+      d2: pack.d2,
+      money: pack.money,
+      bread: pack.bread,
+      ramdomNumber: pack.ramdomNumber
+    }
+    socket.broadcast.emit("ACTION_MAP_RESULT", enviarDadosMap);
+  });//end ACTION_MAP
+
 
 
   socket.on("disconnect", function(){
