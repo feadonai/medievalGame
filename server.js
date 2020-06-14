@@ -477,19 +477,8 @@ io.on('connection', function(socket){
 
 
 
-//  socket.on("ENVIAR_DADOS_CAPTURA", function(pack){
 
-  //  var enviarDados = {
-  //    indexPara: pack.indexPara,
-  //    levelFazenda: pack.levelFazenda,
-  //    levelImpostos : pack.levelImpostos,
-  //    levelArmazemFazenda : pack.levelArmazemFazenda,
-      //levelArmazemImposto : pack.levelArmazemImposto,
-    //  levelEspiao : pack.levelEspiao
-  //  }
-//
-  //  socket.broadcast.emit("DADOS_ENVIADOS_CAPTURA",enviarDados)
-//  });//end socket.on(REQUIRE_DADOS_BATALHA)
+
 
   socket.on("ACTION_MAP", function(pack){
     //console.log("Action map");
