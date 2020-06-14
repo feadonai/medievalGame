@@ -459,14 +459,14 @@ io.on('connection', function(socket){
         defence: "",
         money: pack.money,
         bread: pack.bread,
-        levelFazenda: Territorios[enviarDados.indexDefesa].levelFazenda,
-        levelInposto: Territorios[enviarDados.indexDefesa].levelImposto,
-        levelArmazemComida: Territorios[enviarDados.indexDefesa].levelArmazemComida,
-        levelArmazemMoeda: Territorios[enviarDados.indexDefesa].levelArmazemMoeda,
-        levelEspiao: Territorios[enviarDados.indexDefesa].levelEspiao,
-        tipoProducao: Territorios[enviarDados.indexDefesa].tipoProducao,
-        bonusProducao: Territorios[enviarDados.indexDefesa].bonusProducao,
-        decrescimoProducao: Territorios[enviarDados.indexDefesa].decrescimoProducao
+        levelFazenda: Territorios[pack.indexDefesa].levelFazenda,
+        levelInposto: Territorios[pack.indexDefesa].levelImposto,
+        levelArmazemComida: Territorios[pack.indexDefesa].levelArmazemComida,
+        levelArmazemMoeda: Territorios[pack.indexDefesa].levelArmazemMoeda,
+        levelEspiao: Territorios[pack.indexDefesa].levelEspiao,
+        tipoProducao: Territorios[pack.indexDefesa].tipoProducao,
+        bonusProducao: Territorios[pack.indexDefesa].bonusProducao,
+        decrescimoProducao: Territorios[pack.indexDefesa].decrescimoProducao
     }
       console.log("enviando dados change territorio");
       socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[enviarDados.indexDefesa]);
