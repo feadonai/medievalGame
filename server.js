@@ -460,7 +460,7 @@ io.on('connection', function(socket){
         money: pack.money,
         bread: pack.bread,
         levelFazenda: Territorios[pack.indexDefesa].levelFazenda,
-        levelInposto: Territorios[pack.indexDefesa].levelImposto,
+        levelInposto: Territorios[pack.indexDefesa].levelInposto,
         levelArmazemComida: Territorios[pack.indexDefesa].levelArmazemComida,
         levelArmazemMoeda: Territorios[pack.indexDefesa].levelArmazemMoeda,
         levelEspiao: Territorios[pack.indexDefesa].levelEspiao,
