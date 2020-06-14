@@ -469,7 +469,7 @@ io.on('connection', function(socket){
         decrescimoProducao: Territorios[pack.indexDefesa].decrescimoProducao
     }
       console.log("enviando dados change territorio");
-      socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[enviarDados.indexDefesa]);
+      socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[pack.indexDefesa]);
     }
     //console.log("ENVIANDO DADOS BATALHA PARA tds  por " + enviarDados.idDe);
 
