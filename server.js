@@ -170,7 +170,7 @@ io.on('connection', function(socket){
           bonus = Math.round(ListaBonusProducao[i] / 2)
         }
         var decrescimo =1;
-        if (Math.round(ListaDecrescimoProducao[i] / 2) == 0){
+        if (Math.round(ListaDecrescimoProducao[i] /3) == 0){
           decrescimo = 1;
         }else if (1 ==1){
           decrescimo = Math.round(ListaDecrescimoProducao[i] / 3);
