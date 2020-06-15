@@ -512,9 +512,30 @@ io.on('connection', function(socket){
     }else{
       delete Ataques[pack.ramdomNumber];
       console.log(pack.ramdomNumber + "enviado como fim");
-
-      socket.broadcast.emit("ACTION_MAP_RESULT",{ramdomNumber: ramdomNumber,
-                                                  isOn: pack.isOn});
+      var dadosFimAtaque = {
+        nameUserAtaque: Territorios[indexAtaque].nameUser,
+        nameTerritorioAtaque: Territorios[indexAtaque].nameTerritorio,
+        IDdefesa: Territorios[indexDefesa].IDuser,
+        indexAtaque: pack.indexAtaque,
+        indexDefesa: pack.indexDefesa,
+        isCaptura: pack.isCaptura,
+        timeTrip: pack.timeTrip,
+        tagPrefab: pack.tagPrefab,
+        posX: pack.posX,
+        posY: pack.posY,
+        posZ: pack.posZ,
+        attackPower: pack.attackPower,
+        defencePower: pack.defencePower,
+        a1: pack.a1,
+        a2: pack.a2,
+        d1: pack.d1,
+        d2: pack.d2,
+        money: pack.money,
+        bread: pack.bread,
+        ramdomNumber: pack.ramdomNumber,
+        isOn: pack.isOn
+      }
+      socket.broadcast.emit("ACTION_MAP_RESULT",dadosFimAtaque);
     }
   });//end ACTION_MAP
 
