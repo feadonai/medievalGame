@@ -13,6 +13,7 @@ var database = require('./database');
 
 database.connect(function(err_connect){});//Conecta a base de dados
 
+var Ataques = {};
 var PlayersOnlline = {};
 var Territorios = {};
 var roomFull = false;
@@ -481,26 +482,40 @@ io.on('connection', function(socket){
 
 
   socket.on("ACTION_MAP", function(pack){
-    //console.log("Action map");
-    var enviarDadosMap = {
-      indexDe: pack.indexDe,
-      indexPara: pack.indexPara,
-      timeTrip: pack.timeTrip,
-      tagPrefab: pack.tagPrefab,
-      posX: pack.posX,
-      posY: pack.posY,
-      posZ: pack.posZ,
-      attackPower: pack.attackPower,
-      defencePower: pack.defencePower,
-      a1: pack.a1,
-      a2: pack.a2,
-      d1: pack.d1,
-      d2: pack.d2,
-      money: pack.money,
-      bread: pack.bread,
-      ramdomNumber: pack.ramdomNumber
+    console.log("Action map number: " + pack.ramdomNumber);
+    if (pack.isOn == "true"){
+      Ataques[pack.ramdomNumber] = {
+        nameUserAtaque: Territorios[indexAtaque].nameUser,
+        nameTerritorioAtaque: Territorios[indexAtaque].nameTerritorio,
+        IDdefesa: Territorios[indexDefesa].IDuser,
+        indexAtaque: pack.indexAtaque,
+        indexDefesa: pack.indexDefesa,
+        isCaptura: pack.isCaptura,
+        timeTrip: pack.timeTrip,
+        tagPrefab: pack.tagPrefab,
+        posX: pack.posX,
+        posY: pack.posY,
+        posZ: pack.posZ,
+        attackPower: pack.attackPower,
+        defencePower: pack.defencePower,
+        a1: pack.a1,
+        a2: pack.a2,
+        d1: pack.d1,
+        d2: pack.d2,
+        money: pack.money,
+        bread: pack.bread,
+        ramdomNumber: pack.ramdomNumber,
+        isOn: pack.isOn
+      }
+      console.log(pack.ramdomNumber + "enviado como on");
+      socket.broadcast.emit("ACTION_MAP_RESULT", Ataques[pack.ramdomNumber]);
+    }else{
+      delete Ataques[pack.ramdomNumber];
+      console.log(pack.ramdomNumber + "enviado como fim");
+
+      socket.broadcast.emit("ACTION_MAP_RESULT",{ramdomNumber: ramdomNumber,
+                                                  isOn: pack.isOn});
     }
-    socket.broadcast.emit("ACTION_MAP_RESULT", enviarDadosMap);
   });//end ACTION_MAP
 
 
