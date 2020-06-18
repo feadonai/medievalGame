@@ -571,19 +571,20 @@ io.on('connection', function(socket){
     }
   });//end ACTION_MAP
 
-socket.on("PLAYER_EXIT", function(){
+socket.on("PLAYER_EXIT", function(pack){
   for (key in PlayersOnlline){
-    if (PlayersOnlline[key].nameUser == socket.nameUser){
+    if (PlayersOnlline[key].nameUser == pack.nameUser){
         PlayersOnlline[key].state = "off"
         socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
     }
   }
 })//end player exit
 
-  socket.on("disconnect", function(){
+  socket.on("disconnect", function(pack){
     for (key in PlayersOnlline){
-      if (PlayersOnlline[key].nameUser == socket.nameUser){
+      if (PlayersOnlline[key].nameUser == pack.nameUser){
           PlayersOnlline[key].state = "off"
+          console.log(pack.nameUser + " foi desconectado");
           socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
       }
     }
