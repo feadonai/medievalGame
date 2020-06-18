@@ -88,6 +88,7 @@ io.on('connection', function(socket){
                 for (key in PlayersOnlline){
                   quantPlayers++;
                   if (PlayersOnlline[key].id != CurrentPlayer.id){
+                    console.log(PlayersOnlline[key].nameUser + " esta onlline: " + PlayersOnlline[key].state);
                     socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
                   };
                 };
@@ -113,6 +114,7 @@ io.on('connection', function(socket){
                   stateGame = "lobby"
                   for (key in PlayersOnlline){
                     if (PlayersOnlline[key].id != socket.id){
+
                       socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
                     };
                   };
@@ -581,9 +583,14 @@ socket.on("PLAYER_EXIT", function(pack){
     console.log("desconectando player");
     for (key in PlayersOnlline){
       if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser){
+        if (quantPlayers == 1){
+          delete(PlayersOnlline[key])
+          console.log(PlayersOnlline[key].nameUser + " foi deletado");
+        }else{
           PlayersOnlline[key].state = "off"
-          console.log(PlayersOnlline[key].nameUser + " foi desconectado");
+          console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state);
           socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
+        }
       }
     }
     //roomFull = false;
