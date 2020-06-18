@@ -585,7 +585,7 @@ socket.on("PLAYER_EXIT", function(pack){
     for (key in PlayersOnlline){
       if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser){
           PlayersOnlline[key].state = "off"
-          console.log(pack.nameUser + " foi desconectado");
+          console.log(PlayersOnlline[key].nameUser + " foi desconectado");
           socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
       }
     }
