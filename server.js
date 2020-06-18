@@ -108,11 +108,11 @@ io.on('connection', function(socket){
                     nameUser:  pack.user,
                   }
                   console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[socket.id].nameUser);
-                  socket.emit("LOGIN_SUCCESS", PlayersOnlline[key]);
-                  socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[key]);
+                  socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
+                  socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[socket.id]);
                   stateGame = "lobby"
                   for (key in PlayersOnlline){
-                    if (PlayersOnlline[key].id != CurrentPlayer.id){
+                    if (PlayersOnlline[key].id != socket.id){
                       socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
                     };
                   };
