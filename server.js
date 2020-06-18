@@ -100,11 +100,12 @@ io.on('connection', function(socket){
           }else{
             for (key in PlayersOnlline){
               if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
+                delete(PlayersOnlline[key])
                 if (stateGame == "lobby"){
-                  PlayersOnlline[key] = {
+                  PlayersOnlline[socket.id] = {
                     state: "lobby",
-                    id: CurrentPlayer.id,
-                    nameUser: PlayersOnlline[key].nameUser,
+                    id: socket.id,
+                    nameUser:  pack.user,
                   }
                   console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[key].nameUser);
                   socket.emit("LOGIN_SUCCESS", PlayersOnlline[key]);
