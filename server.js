@@ -99,8 +99,10 @@ io.on('connection', function(socket){
                 console.log("Player Onlline: " + quantPlayers);
             });
           }else{
+            var userNotOff = false;
             for (key in PlayersOnlline){
               if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
+                userNotOff = true;
                 delete(PlayersOnlline[key])
                 if (stateGame == "lobby"){
                   PlayersOnlline[socket.id] = {
@@ -124,12 +126,47 @@ io.on('connection', function(socket){
                   }
                   console.log(pack.user + "se reconectou no math: " +PlayersOnlline[key].nameUser);
                 }
-
               }
             }
-            socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE");
+            if (!userNotOff){
+              socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE");
+            }
           }
-        }else{socket.emit("LOGIN_FAILED_ROOM_FULL");}
+        }else{
+          var userNotOff = false;
+          for (key in PlayersOnlline){
+            if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
+              userNotOff = true;
+              delete(PlayersOnlline[key])
+              if (stateGame == "lobby"){
+                PlayersOnlline[socket.id] = {
+                  state: "lobby",
+                  id: socket.id,
+                  nameUser:  pack.user,
+                }
+                console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[socket.id].nameUser);
+                socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
+                socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[socket.id]);
+                stateGame = "lobby"
+                for (key in PlayersOnlline){
+                  if (PlayersOnlline[key].id != socket.id){
+
+                    socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
+                  };
+                };
+              }else if (stateGame == "math"){
+                PlayersOnlline[key] = {
+                  state: "math"
+                }
+                console.log(pack.user + "se reconectou no math: " +PlayersOnlline[key].nameUser);
+              }
+            }
+          }
+          if (!userNotOff){
+            socket.emit("LOGIN_FAILED_ROOM_FULL");
+          }
+
+        }
       }else if (!exist){socket.emit("LOGIN_FAILED");}
     });
   });//end socket.on(LOGIN)
