@@ -13,7 +13,7 @@ var database = require('./database');
 
 database.connect(function(err_connect){});//Conecta a base de dados
 
-var stateGame;
+var stateGame = "off";
 var Ataques = {};
 var PlayersOnlline = {};
 var Territorios = {};
@@ -55,15 +55,12 @@ io.on('connection', function(socket){
     database.verificUser(pack.user, pack.password, function(exist){
       if (exist){
         var userAlreadyOnlline = false;
-        //if (CurrentPlayer.estate == "math" || CurrentPlayer.estate == "lobby"){
           for (key in PlayersOnlline){
-            //console.log(PlayersOnlline[key].name + " user pack: " + pack.user);
             if (PlayersOnlline[key].nameUser == pack.user){
               userAlreadyOnlline = true;
-            };
-          };
-          console.log("usuario ja onlline: " +userAlreadyOnlline);
-        //}
+            }
+          }//ve se o player esta onlline
+          console.log("usuario ja onlline: " + userAlreadyOnlline);
         if (!roomFull){
           if (!userAlreadyOnlline){
             database.lookForUser(pack.user, function(err, rows){
@@ -72,104 +69,73 @@ io.on('connection', function(socket){
                   id: socket.id,
                   nameUser: pack.user, // ou user: rows[0].user
                   state: "lobby"
-                  //canStart: "0"
                 };
-                PlayersOnlline[CurrentPlayer.id] = {
-                  id: CurrentPlayer.id,
-                  nameUser: CurrentPlayer.nameUser,
+                PlayersOnlline[pack.id] = {
+                  id: pack.id,
+                  nameUser: pack.user,
                   state: "lobby"
-                  //canStart: "0"
                 }
-                console.log(CurrentPlayer.id);
                 socket.emit("LOGIN_SUCCESS", CurrentPlayer);
                 socket.broadcast.emit("PLAYER_JOIN", CurrentPlayer);
                 stateGame = "lobby"
                 quantPlayers = 0;
                 for (key in PlayersOnlline){
                   quantPlayers++;
-                  if (PlayersOnlline[key].id != CurrentPlayer.id){
+                  if (PlayersOnlline[key].id != pack.id){
                     console.log(PlayersOnlline[key].nameUser + " esta onlline: " + PlayersOnlline[key].state);
                     socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
-                  };
-                };
+                  }else{
+                    console.log(PlayersOnlline[key].nameUser + " (acabou de logar) esta onlline: " + PlayersOnlline[key].state);
+                  }
+                }//define quantidade de players onlline e informa o plçayer outros plçayers
+                console.log("Player Onlline: " + quantPlayers);
                 if (quantPlayers >= 2){
                   roomFull = true;
-                }else{roomFull = false;}
-                console.log(CurrentPlayer.nameUser + " join on the loby. ESTATE: "+ CurrentPlayer.state);
-                console.log("Player Onlline: " + quantPlayers);
+                }else{roomFull = false}
             });
           }else{
-            var userNotOff = false;
-            for (key in PlayersOnlline){
-              if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
-                userNotOff = true;
-                delete(PlayersOnlline[key])
-                if (stateGame == "lobby"){
-                  PlayersOnlline[socket.id] = {
-                    state: "lobby",
-                    id: socket.id,
-                    nameUser:  pack.user,
-                  }
-                  console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[socket.id].nameUser);
-                  socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
-                  socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[socket.id]);
-                  stateGame = "lobby"
-                  for (key in PlayersOnlline){
-                    if (PlayersOnlline[key].id != socket.id){
-
-                      socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
-                    };
-                  };
-                }else if (stateGame == "math"){
-                  PlayersOnlline[key] = {
-                    state: "math"
-                  }
-                  console.log(pack.user + "se reconectou no math: " +PlayersOnlline[key].nameUser);
-                }
-              }
-            }
-            if (!userNotOff){
-              socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE");
-            }
+            if(!isUserOff(pack.name)){socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE")}
           }
         }else{
-          var userNotOff = false;
-          for (key in PlayersOnlline){
-            if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
-              userNotOff = true;
-              delete(PlayersOnlline[key])
-              if (stateGame == "lobby"){
-                PlayersOnlline[socket.id] = {
-                  state: "lobby",
-                  id: socket.id,
-                  nameUser:  pack.user,
-                }
-                console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[socket.id].nameUser);
-                socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
-                socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[socket.id]);
-                stateGame = "lobby"
-                for (key in PlayersOnlline){
-                  if (PlayersOnlline[key].id != socket.id){
-
-                    socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
-                  };
-                };
-              }else if (stateGame == "math"){
-                PlayersOnlline[key] = {
-                  state: "math"
-                }
-                console.log(pack.user + "se reconectou no math: " +PlayersOnlline[key].nameUser);
-              }
-            }
-          }
-          if (!userNotOff){
-            socket.emit("LOGIN_FAILED_ROOM_FULL");
-          }
-
+          if(!isUserOff(pack.name)){socket.emit("LOGIN_FAILED_ROOM_FULL")}
         }
       }else if (!exist){socket.emit("LOGIN_FAILED");}
     });
   });//end socket.on(LOGIN)
+
+function isUserOff(userName){
+  var isOff = false;
+  if(stateGame == "math"){
+    for (key in PlayersOnlline){
+      if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
+        isOff = true;
+        delete(PlayersOnlline[key])
+        PlayersOnlline[socket.id] = {
+        state: "math",
+        id: socket.id,
+        nameUser:  userName,
+        tag: PlayersOnlline[key].tag
+      }
+        console.log(userName + "se reconectou na partida: " +PlayersOnlline[socket.id].state);
+        socket.broadcast.emit("PLAYER_RECONECTED_ON_MATH", PlayersOnlline[socket.id])
+        //ver como fazer---------------------------------
+        socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
+        for (key in PlayersOnlline){
+          if (PlayersOnlline[key].id != socket.id){
+          socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
+          }
+        }
+        for (var i = 0; i < numTerritorios; i ++){
+          socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
+        }
+        //-----------------------------------------------------
+      //fazer player entrar na partida com tds os territorios certos
+      //socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[socket.id]);
+      }
+    }
+  }
+  return isOff;
+}
 
   socket.on("TRY_START_GAME", function(pack){
   //atualiza os estatos do cliente lobby/pre-lobby
@@ -608,28 +574,36 @@ io.on('connection', function(socket){
   });//end ACTION_MAP
 
 socket.on("PLAYER_EXIT", function(pack){
-  for (key in PlayersOnlline){
-    if (PlayersOnlline[key].nameUser == pack.nameUser){
-        PlayersOnlline[key].state = "off"
-        socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
-    }
-  }
+  disconectPlayer()
 })//end player exit
 
-  socket.on("disconnect", function(){
-    console.log("desconectando player");
-    for (key in PlayersOnlline){
-      if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser){
-        if (quantPlayers == 1){
-          delete(PlayersOnlline[key])
-          console.log(PlayersOnlline[key].nameUser + " foi deletado");
-        }else{
-          PlayersOnlline[key].state = "off"
-          console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state);
-          socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
-        }
+function disconectPlayer(){
+  console.log("desconectando player: " + socket.id);
+  for (key in PlayersOnlline){
+    if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
+      quantPlayers = 0;
+      for (key in PlayersOnlline){quantPlayers++}
+      if (quantPlayers <= 1){
+        delete(PlayersOnlline[key])
+        stateGame = "off"
+        roomFull = false;
+        console.log(PlayersOnlline[key].nameUser + " foi deletado");
+      }else{
+        PlayersOnlline[key].state = "off"
+        console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state);
+        socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
       }
+    }else if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby")){
+      socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
+      console.log(PlayersOnlline[key].nameUser +" foi deletado no looby");
+      delete PlayersOnlline[key];
+      quantPlayers = 0;
+      for (key in PlayersOnlline){quantPlayers++}
     }
+  }
+}
+  socket.on("disconnect", function(){
+    disconectPlayer()
     //roomFull = false;
     //if (CurrentPlayer.state == "math" || CurrentPlayer.state == "lobby" || CurrentPlayer.state == "pre-lobby"){
     //  quantPlayers--;
