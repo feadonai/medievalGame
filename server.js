@@ -573,7 +573,7 @@ io.on('connection', function(socket){
 
 socket.on("PLAYER_EXIT", function(pack){
   for (key in PlayersOnlline){
-    if (PlayersOnlline[key].nameUser == pack.nameUser){
+    if (PlayersOnlline[key].id == pack.id){
         PlayersOnlline[key].state = "off"
         socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
     }
@@ -582,7 +582,7 @@ socket.on("PLAYER_EXIT", function(pack){
 
   socket.on("disconnect", function(pack){
     for (key in PlayersOnlline){
-      if (PlayersOnlline[key].nameUser == pack.nameUser){
+      if (PlayersOnlline[key]. == pack.nameUser){
           PlayersOnlline[key].state = "off"
           console.log(pack.nameUser + " foi desconectado");
           socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
