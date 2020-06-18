@@ -21,12 +21,6 @@ var roomFull = false;
 var quantPlayers = 0;
 io.on('connection', function(socket){
   console.log("Somebody conected ID: " + socket.id);
-  for (key in PlayersOnlline){
-    if (PlayersOnlline[key].id == socket.id){
-        PlayersOnlline[key].state = stateGame
-        console.log(PlayersOnlline[key].nameUser +" reconectou-se");
-    }
-  }
   var CurrentPlayer = {};
 
   socket.on("REGISTER", function(pack){
@@ -108,7 +102,9 @@ io.on('connection', function(socket){
               if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
                 if (stateGame == "lobby"){
                   PlayersOnlline[key] = {
-                    state: "lobby"
+                    state: "lobby",
+                    id: CurrentPlayer.id,
+                    nameUser: PlayersOnlline[key].nameUser,
                   }
                   console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[key].nameUser);
                   socket.emit("LOGIN_SUCCESS", PlayersOnlline[key]);
