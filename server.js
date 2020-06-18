@@ -13,6 +13,7 @@ var database = require('./database');
 
 database.connect(function(err_connect){});//Conecta a base de dados
 
+var stateGame;
 var Ataques = {};
 var PlayersOnlline = {};
 var Territorios = {};
@@ -20,6 +21,12 @@ var roomFull = false;
 var quantPlayers = 0;
 io.on('connection', function(socket){
   console.log("Somebody conected ID: " + socket.id);
+  for (key in PlayersOnlline){
+    if (PlayersOnlline[key].id == socket.id){
+        PlayersOnlline[key].state = stateGame
+        console.log(PlayersOnlline[key].nameUser +" reconectou-se");
+    }
+  }
   var CurrentPlayer = {};
 
   socket.on("REGISTER", function(pack){
@@ -82,6 +89,7 @@ io.on('connection', function(socket){
                 console.log(CurrentPlayer.id);
                 socket.emit("LOGIN_SUCCESS", CurrentPlayer);
                 socket.broadcast.emit("PLAYER_JOIN", CurrentPlayer);
+                stateGame = "lobby"
                 quantPlayers = 0;
                 for (key in PlayersOnlline){
                   quantPlayers++;
@@ -95,7 +103,33 @@ io.on('connection', function(socket){
                 console.log(CurrentPlayer.nameUser + " join on the loby. ESTATE: "+ CurrentPlayer.state);
                 console.log("Player Onlline: " + quantPlayers);
             });
-          }else{socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE");}
+          }else{
+            for (key in PlayersOnlline){
+              if (PlayersOnlline[key].nameUser == pack.user && PlayersOnlline[key].state == "off"){
+                if (stateGame == "lobby"){
+                  PlayersOnlline[key] = {
+                    state: "lobby"
+                  }
+                  console.log(pack.user + "se reconectou no lobby: " +PlayersOnlline[key].nameUser);
+                  socket.emit("LOGIN_SUCCESS", PlayersOnlline[key]);
+                  socket.broadcast.emit("PLAYER_JOIN", PlayersOnlline[key]);
+                  stateGame = "lobby"
+                  for (key in PlayersOnlline){
+                    if (PlayersOnlline[key].id != CurrentPlayer.id){
+                      socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
+                    };
+                  };
+                }else if (stateGame == "math"){
+                  PlayersOnlline[key] = {
+                    state: "math"
+                  }
+                  console.log(pack.user + "se reconectou no math: " +PlayersOnlline[key].nameUser);
+                }
+
+              }
+            }
+            socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE");
+          }
         }else{socket.emit("LOGIN_FAILED_ROOM_FULL");}
       }else if (!exist){socket.emit("LOGIN_FAILED");}
     });
@@ -341,6 +375,7 @@ io.on('connection', function(socket){
       console.log("enviando dados..." + i);
       socket.emit("START_GAME_SUCESS", Territorios[i]);
       socket.broadcast.emit("START_GAME_SUCESS", Territorios[i]);}//enivio dos dados iniciais aos clientes
+      stateGame = "math"
 //emite sucesso e envia dados em start game para tds jogadores
   }else{
     for (key in PlayersOnlline){
@@ -478,9 +513,6 @@ io.on('connection', function(socket){
 
 
 
-
-
-
   socket.on("ACTION_MAP", function(pack){
     console.log("Action map number: " + pack.ramdomNumber);
     if (pack.isOn == "true"){
@@ -539,25 +571,38 @@ io.on('connection', function(socket){
     }
   });//end ACTION_MAP
 
-
+socket.on("PLAYER_EXIT", function(){
+  for (key in PlayersOnlline){
+    if (PlayersOnlline[key].nameUser == socket.nameUser){
+        PlayersOnlline[key].state = "off"
+        socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
+    }
+  }
+})//end player exit
 
   socket.on("disconnect", function(){
-    roomFull = false;
-    if (CurrentPlayer.state == "math" || CurrentPlayer.state == "lobby" || CurrentPlayer.state == "pre-lobby"){
-      quantPlayers--;
-      console.log("Player Onlline: " + quantPlayers);
-      for (key in PlayersOnlline){
-        if (PlayersOnlline[key].id == socket.id){
-          if (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby"){
-            socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
-          }else if (PlayersOnlline[key].state == "math"){
-            socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
-          }
-          console.log("Player disconnect: "+ PlayersOnlline[key].nameUser + " ESTATE: " + PlayersOnlline[key].state);
-          delete PlayersOnlline[key];
-        };
-      };
-    }else{console.log(socket.id + " disconected");}
+    for (key in PlayersOnlline){
+      if (PlayersOnlline[key].nameUser == socket.nameUser){
+          PlayersOnlline[key].state = "off"
+          socket.broadcast.emit("OTHER_PLAYER_QUIT",PlayersOnlline[key]);
+      }
+    }
+    //roomFull = false;
+    //if (CurrentPlayer.state == "math" || CurrentPlayer.state == "lobby" || CurrentPlayer.state == "pre-lobby"){
+    //  quantPlayers--;
+    //  console.log("Player Onlline: " + quantPlayers);
+    //  for (key in PlayersOnlline){
+    //    if (PlayersOnlline[key].id == socket.id){
+    //      if (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby"){
+    //        socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
+    //      }else if (PlayersOnlline[key].state == "math"){
+    //        socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
+    //      }
+    //      console.log("Player disconnect: "+ PlayersOnlline[key].nameUser + " ESTATE: " + PlayersOnlline[key].state);
+    //      delete PlayersOnlline[key];
+    //    };
+    //  };
+    //}else{console.log(socket.id + " disconected");}
   });//end socket.on(disconnect)
 
 });//end io.on(concection)
