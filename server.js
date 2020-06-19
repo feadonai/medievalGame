@@ -138,6 +138,7 @@ function isUserOff(userName){
         //mudar 16 para numero de territoriossss
         for (var i = 0; i < Territorios[i].numTerritorios; i ++){
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
+          console.log("enviando para login math territorio: " + Territorios[i].index);
         }
         //-----------------------------------------------------
       //fazer player entrar na partida com tds os territorios certos
