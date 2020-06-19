@@ -145,7 +145,7 @@ function isUserOff(userName){
     PlayersOnlline[CurrentPlayer.id].state = "pre-lobby"
   }
   else if(pack.startGame == "0"){
-    PlayersOnlline[CurrentPlayer.id].state= "lobby"
+    PlayersOnlline[CurrentPlayer.id].state = "lobby"
   }
   //conta quantos clientes podem começar o jogo
   var numCanStart = 0;
@@ -573,6 +573,7 @@ socket.on("PLAYER_EXIT", function(pack){
 function disconectPlayer(){
   console.log("desconectando player: " + socket.id);
   for (key in PlayersOnlline){
+    console.log(CurrentPlayer.nameUser + " esta sendo desconectado");
     if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
       quantPlayers = 0;
       for (key in PlayersOnlline){quantPlayers++}
