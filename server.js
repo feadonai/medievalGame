@@ -490,6 +490,7 @@ function isUserOff(userName){
       }
       console.log("new tag eh :" + newTag);
       Territorios[pack.indexDefesa] = {
+        numTerritorios: Territorios[pack.index].numTerritorios,
         tipo: "player",
         index: Territorios[pack.indexDefesa].index,
         tag: newTag,
@@ -497,7 +498,7 @@ function isUserOff(userName){
         nameUser: Territorios[pack.indexAtaque].nameUser,
         IDuser: Territorios[pack.indexAtaque].IDuser,
         nameTerritorio: pack.newNameTerritorio,
-
+        state: "math",
         a1: pack.a1,
         a2: pack.a2,
         d1: pack.d1,
