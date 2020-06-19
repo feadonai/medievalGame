@@ -395,6 +395,7 @@ function isUserOff(userName){
     //console.log(pack.index + " sendo modificado");
     if (Territorios[pack.index].tagUser == pack.tagUser){
       Territorios[pack.index] = {
+      numTerritorios: Territorios[pack.index].numTerritorios,
       tipo: "player",
       index: pack.index,
       tag: pack.tag,
