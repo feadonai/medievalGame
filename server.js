@@ -55,7 +55,12 @@ io.on('connection', function(socket){
     database.verificUser(pack.user, pack.password, function(exist){
       if (exist){
         var userAlreadyOnlline = false;
+        quantPlayers = 0;
           for (key in PlayersOnlline){
+            quantPlayers++;
+            if (quantPlayers >= 2){
+              roomFull = true;
+            }else{roomFull = false}
             if (PlayersOnlline[key].nameUser == pack.user){
               userAlreadyOnlline = true;
             }
@@ -78,9 +83,7 @@ io.on('connection', function(socket){
                 socket.emit("LOGIN_SUCCESS", CurrentPlayer);
                 socket.broadcast.emit("PLAYER_JOIN", CurrentPlayer);
                 stateGame = "lobby"
-                quantPlayers = 0;
                 for (key in PlayersOnlline){
-                  quantPlayers++;
                   if (PlayersOnlline[key].id != CurrentPlayer.id){
                     console.log(PlayersOnlline[key].nameUser + " esta onlline: " + PlayersOnlline[key].state);
                     socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
@@ -88,10 +91,7 @@ io.on('connection', function(socket){
                     console.log(PlayersOnlline[key].nameUser + " (acabou de logar) esta onlline: " + PlayersOnlline[key].state);
                   }
                 }//define quantidade de players onlline e informa o plçayer outros plçayers
-                console.log("Player Onlline: " + quantPlayers);
-                if (quantPlayers >= 2){
-                  roomFull = true;
-                }else{roomFull = false}
+                console.log("Player Onlline: " + (quantPlayers + 1));
             });
           }else{
             if(!isUserOff(pack.name)){socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE")}
@@ -583,7 +583,6 @@ function disconectPlayer(){
         console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
         delete(PlayersOnlline[key])
         stateGame = "off"
-        roomFull = false;
         console.log(PlayersOnlline[key].nameUser + " foi deletado");
       }else{
         console.log("nome user " + PlayersOnlline[key].nameUser)
@@ -595,9 +594,6 @@ function disconectPlayer(){
       socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
       console.log(PlayersOnlline[key].nameUser +" foi deletado no looby");
       delete PlayersOnlline[key];
-      roomFull = false;
-      quantPlayers = 0;
-      for (key in PlayersOnlline){quantPlayers++}
     }
   }
 }
