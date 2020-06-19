@@ -105,23 +105,26 @@ io.on('connection', function(socket){
   });//end socket.on(LOGIN)
 
 function isUserOff(userName){
+  console.log("on is user off");
   var isOff = false;
   if(stateGame == "math"){
+    console.log("is math");
     for (key in PlayersOnlline){
       if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
+        console.log(PlayersOnlline[key].nameUser + " reconectando...");
         isOff = true;
-        delete(PlayersOnlline[key])
-        CurrentPlayer = {
-          id: socket.id,
-          nameUser: userName, // ou user: rows[0].user
-          state: "math"
-        }
         PlayersOnlline[socket.id] = {
         state: "math",
         id: socket.id,
         nameUser:  userName,
         tag: PlayersOnlline[key].tag
-      }
+        }
+        delete(PlayersOnlline[key])
+        CurrentPlayer = {
+          id: socket.id,
+          nameUser: userName, // ou user: rows[0].user
+          state: "math"
+        }      
         console.log(userName + "se reconectou na partida: " +PlayersOnlline[socket.id].state);
         socket.broadcast.emit("PLAYER_RECONECTED_ON_MATH", PlayersOnlline[socket.id])
         //ver como fazer---------------------------------
