@@ -111,6 +111,11 @@ function isUserOff(userName){
       if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
         isOff = true;
         delete(PlayersOnlline[key])
+        CurrentPlayer = {
+          id: socket.id,
+          nameUser: userName, // ou user: rows[0].user
+          state: "math"
+        }
         PlayersOnlline[socket.id] = {
         state: "math",
         id: socket.id,
