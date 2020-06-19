@@ -124,7 +124,7 @@ function isUserOff(userName){
           id: socket.id,
           nameUser: userName, // ou user: rows[0].user
           state: "math"
-        }      
+        }
         console.log(userName + "se reconectou na partida: " +PlayersOnlline[socket.id].state);
         socket.broadcast.emit("PLAYER_RECONECTED_ON_MATH", PlayersOnlline[socket.id])
         //ver como fazer---------------------------------
@@ -135,7 +135,8 @@ function isUserOff(userName){
           }
         }
         socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
-        for (var i = 0; i < numTerritorios; i ++){
+        //mudar 16 para numero de territoriossss
+        for (var i = 0; i < 16; i ++){
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
         }
         //-----------------------------------------------------
