@@ -137,7 +137,7 @@ function isUserOff(userName){
         socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
         //mudar 16 para numero de territoriossss
 
-        for (var i = 0; i < Territorios[i].numTerritorios; i ++){
+        for (var i = 0; i < Territorios[0].numTerritorios; i ++){
           console.log("num territorios: " + Territorios[i].numTerritorios);
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
           console.log("enviando para login math territorio: " + Territorios[i].index);
@@ -601,10 +601,11 @@ function disconectPlayer(){
       if (quantPlayersOn <= 1){
         console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
         for (key3 in PlayersOnlline){
+          console.log(PlayersOnlline[key3].nameUser + " foi deletado");
           delete(PlayersOnlline[key3])
         }
         stateGame = "off"
-        console.log(PlayersOnlline[key].nameUser + " foi deletado");
+
         console.log("sala vazia");
       }else{
         console.log("nome user " + PlayersOnlline[key].nameUser)
