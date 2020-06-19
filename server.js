@@ -69,7 +69,7 @@ io.on('connection', function(socket){
                   id: socket.id,
                   nameUser: pack.user, // ou user: rows[0].user
                   state: "lobby"
-                };
+                }
                 PlayersOnlline[CurrentPlayer.id] = {
                   id: CurrentPlayer.id,
                   nameUser: pack.user,
@@ -81,7 +81,7 @@ io.on('connection', function(socket){
                 quantPlayers = 0;
                 for (key in PlayersOnlline){
                   quantPlayers++;
-                  if (PlayersOnlline[key].id != pack.id){
+                  if (PlayersOnlline[key].id != CurrentPlayer.id){
                     console.log(PlayersOnlline[key].nameUser + " esta onlline: " + PlayersOnlline[key].state);
                     socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
                   }else{
