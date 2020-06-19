@@ -590,6 +590,7 @@ function disconectPlayer(){
       socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
       console.log(PlayersOnlline[key].nameUser +" foi deletado no looby");
       delete PlayersOnlline[key];
+      roomFull = false;
       quantPlayers = 0;
       for (key in PlayersOnlline){quantPlayers++}
     }
