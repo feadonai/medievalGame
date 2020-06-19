@@ -125,6 +125,7 @@ function isUserOff(userName){
           socket.emit("PLAYER_JOIN", PlayersOnlline[key]);
           }
         }
+        socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
         for (var i = 0; i < numTerritorios; i ++){
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
         }
