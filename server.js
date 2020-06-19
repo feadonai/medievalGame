@@ -59,6 +59,7 @@ io.on('connection', function(socket){
           for (key in PlayersOnlline){
             quantPlayers++;
             if (quantPlayers >= 2){
+              console.log(PlayersOnlline[key].nameUser + " ja esta onlline");
               roomFull = true;
             }else{roomFull = false}
             if (PlayersOnlline[key].nameUser == pack.user){
