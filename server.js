@@ -575,6 +575,7 @@ function disconectPlayer(){
   for (key in PlayersOnlline){
     console.log(CurrentPlayer.nameUser + " esta sendo desconectado");
     if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
+      console.log("nome user " + PlayersOnlline[key].nameUser)
       quantPlayers = 0;
       for (key in PlayersOnlline){quantPlayers++}
       if (quantPlayers <= 1){
@@ -583,6 +584,7 @@ function disconectPlayer(){
         roomFull = false;
         console.log(PlayersOnlline[key].nameUser + " foi deletado");
       }else{
+        console.log("nome user " + PlayersOnlline[key].nameUser)
         PlayersOnlline[key].state = "off"
         console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state);
         socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
