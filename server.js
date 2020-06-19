@@ -65,6 +65,7 @@ io.on('connection', function(socket){
               userAlreadyOnlline = true;
             }
           }//ve se o player esta onlline
+          console.log("sala cheia: " + roomFull);
           console.log("usuario ja onlline: " + userAlreadyOnlline);
         if (!roomFull){
           if (!userAlreadyOnlline){
@@ -94,10 +95,10 @@ io.on('connection', function(socket){
                 console.log("Player Onlline: " + (quantPlayers + 1));
             });
           }else{
-            if(!isUserOff(pack.name)){socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE")}
+            if(!isUserOff(pack.user)){socket.emit("LOGIN_FAILED_USER_ALREADY_ONLINE")}
           }
         }else{
-          if(!isUserOff(pack.name)){socket.emit("LOGIN_FAILED_ROOM_FULL")}
+          if(!isUserOff(pack.user)){socket.emit("LOGIN_FAILED_ROOM_FULL")}
         }
       }else if (!exist){socket.emit("LOGIN_FAILED");}
     });
