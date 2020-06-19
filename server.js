@@ -136,6 +136,7 @@ function isUserOff(userName){
         }
         socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
         //mudar 16 para numero de territoriossss
+        console.log("num territorios: " + Territorios[i].numTerritorios);
         for (var i = 0; i < Territorios[i].numTerritorios; i ++){
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
           console.log("enviando para login math territorio: " + Territorios[i].index);
@@ -591,7 +592,8 @@ function disconectPlayer(){
       var quantPlayersOn = 0
       for (key2 in PlayersOnlline){
         if (PlayersOnlline[key2].state != "off"){
-        quantPlayersOn++
+          console.log(PlayersOnlline[key2].nameUser +" is " + PlayersOnlline[key2].state);
+          quantPlayersOn++
         }
       }
       console.log("nome user " + PlayersOnlline[key].nameUser+ " id: " + key)
