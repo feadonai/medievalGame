@@ -575,10 +575,10 @@ function disconectPlayer(){
   for (key in PlayersOnlline){
     console.log(CurrentPlayer.nameUser + " esta sendo desconectado");
     if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
-      console.log("nome user " + PlayersOnlline[key].nameUser)
+      console.log("nome user " + PlayersOnlline[key].nameUser + " id: " + key)
       quantPlayers = 0;
-      for (key in PlayersOnlline){quantPlayers++}
-      console.log("nome user " + PlayersOnlline[key].nameUser)
+      for (key2 in PlayersOnlline){quantPlayers++}
+      console.log("nome user " + PlayersOnlline[key].nameUser+ " id: " + key)
       if (quantPlayers <= 1){
         console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
         delete(PlayersOnlline[key])
@@ -587,7 +587,7 @@ function disconectPlayer(){
       }else{
         console.log("nome user " + PlayersOnlline[key].nameUser)
         PlayersOnlline[key].state = "off"
-        console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state);
+        console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state+ " id: " + key);
         socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
       }
     }else if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby")){
