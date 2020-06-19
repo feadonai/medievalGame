@@ -578,7 +578,9 @@ function disconectPlayer(){
       console.log("nome user " + PlayersOnlline[key].nameUser)
       quantPlayers = 0;
       for (key in PlayersOnlline){quantPlayers++}
+      console.log("nome user " + PlayersOnlline[key].nameUser)
       if (quantPlayers <= 1){
+        console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
         delete(PlayersOnlline[key])
         stateGame = "off"
         roomFull = false;
