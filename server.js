@@ -136,8 +136,9 @@ function isUserOff(userName){
         }
         socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
         //mudar 16 para numero de territoriossss
-        console.log("num territorios: " + Territorios[i].numTerritorios);
+
         for (var i = 0; i < Territorios[i].numTerritorios; i ++){
+          console.log("num territorios: " + Territorios[i].numTerritorios);
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
           console.log("enviando para login math territorio: " + Territorios[i].index);
         }
