@@ -70,8 +70,8 @@ io.on('connection', function(socket){
                   nameUser: pack.user, // ou user: rows[0].user
                   state: "lobby"
                 };
-                PlayersOnlline[pack.id] = {
-                  id: pack.id,
+                PlayersOnlline[CurrentPlayer.id] = {
+                  id: CurrentPlayer.id,
                   nameUser: pack.user,
                   state: "lobby"
                 }
@@ -142,18 +142,10 @@ function isUserOff(userName){
   //atualiza os estatos do cliente lobby/pre-lobby
   console.log("tent inicar my_game");
   if(pack.startGame == "1"){
-    PlayersOnlline[pack.id] = {
-      id: PlayersOnlline[pack.id].id,
-      nameUser: PlayersOnlline[pack.id].nameUser,
-      state: "pre-lobby"
-    };
+    PlayersOnlline[CurrentPlayer.id].state = "pre-lobby"
   }
   else if(pack.startGame == "0"){
-    PlayersOnlline[pack.id] = {
-      id: PlayersOnlline[pack.id].id,
-      nameUser: PlayersOnlline[pack.id].nameUser,
-      state: "lobby"
-    };
+    PlayersOnlline[CurrentPlayer.id].state= "lobby"
   }
   //conta quantos clientes podem começar o jogo
   var numCanStart = 0;
