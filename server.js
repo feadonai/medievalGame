@@ -404,7 +404,7 @@ function isUserOff(userName){
       nameUser: pack.nameUser,
       IDuser: pack.IDuser,
       nameTerritorio: pack.nameTerritorio,
-      state: Territorios[pack.index].state,
+      state: "math",
 
       a1: pack.a1,
       a2: pack.a2,
