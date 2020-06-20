@@ -149,9 +149,10 @@ function isThisUserTryingReconect(userName){
     console.log("quantPlayersGeral: " + quantPlayersGeral())
     console.log("quantPlayersOn: " + quantPlayersOn())
     var wasOFF = false;
+    console.log("estado game: " + stateGame);
     if(stateGame == "math"){
       for (key in PlayersOnlline){
-        if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "off"){
+        if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
           console.log(PlayersOnlline[key].nameUser + " esta reconectando na partida");
           wasOFF = true;
           PlayersOnlline[CurrentPlayer.id] = {
