@@ -155,6 +155,11 @@ function isThisUserTryingReconect(userName){
         if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
           console.log(PlayersOnlline[key].nameUser + " esta reconectando na partida");
           wasOFF = true;
+          CurrentPlayer = {
+            id: socket.id,
+            nameUser: userName,
+            state: "math"
+          }
           PlayersOnlline[CurrentPlayer.id] = {
             state: "math",
             id: CurrentPlayer.id,
@@ -496,7 +501,7 @@ socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
 }); //end cliente_solicita_dados. Envia tds os dados de um index para o respectivo cliente
 
 socket.on("ENVIAR_DADOS_BATALHA", function(pack){
-    console.log("on Enviar dadosBatalha.  dados batalha recebido");
+    console.log("on Enviar dadosBatalha.  dados batalha recebido. isCapruta:  " + pack.isCaptura + " isVitoria: " + pack.isVitoria);
     if (Territorios[pack.indexDefesa].tipo == "player"){
       console.log("batalha em player");
       var enviarDados = {
@@ -650,7 +655,7 @@ socket.on("disconnect", function(){
 })//END disconnect
 
 function disconectPlayer(){
-    console.log("tentando desconectar player ID: " + CurrentPlayer.id + " name: " + CurrentPlayer.nameUser + " state: " + CurrentPlayer.state);
+    console.log("tentando desconectar player ID: " + CurrentPlayer.id + " name: " + CurrentPlayer.nameUser);
     for (key in PlayersOnlline){
       if (PlayersOnlline[key].id == CurrentPlayer.id && PlayersOnlline[key].state == "math"){
         console.log(PlayersOnlline[key].nameUser + " encontrado com estado math");
