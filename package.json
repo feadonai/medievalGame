@@ -2,10 +2,10 @@
   "name": "medievalgameserver",
   "version": "1.0.0",
   "description": "servidor do meu jogo multiplayer de estrategia em tempo real, acompanhado de banco de dados 06/2020",
-  "main": "server.js",
+  "main": "serverV2.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node serverV2.js"
   },
   "author": "felipe",
   "license": "ISC",
