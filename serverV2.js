@@ -380,7 +380,7 @@ socket.on("TRY_START_GAME", function(pack){
     for (key in PlayersOnlline){
       index++;
       PlayersOnlline[key].state = "math"
-      PlayersOnlline[key].tag = ("player" + index)
+      PlayersOnlline[key].tag = index
       if (index == 1){
         Territorios[randomNumber1] = {
           numTerritorios: numTerritorios,
