@@ -527,7 +527,7 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
       console.log("enviando dados batalha para player");
       socket.broadcast.emit("DADOS_ENVIADOS_BATALHA",enviarDados);
     }
-    if (pack.isCaptura = "1" && pack.isVitoria == "1"){
+    if (pack.isCaptura == "1" && pack.isVitoria == "1"){
       console.log("foi captura e vitoria");
       var newTag;
       if (Territorios[pack.indexDefesa].tipo == "bot"){
