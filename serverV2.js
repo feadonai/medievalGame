@@ -121,18 +121,18 @@ socket.on("LOGIN", function(pack){
   })
 
 function quantPlayersGeral(){
-    quantPlayersGeral = 0;
+    var quantPlayers = 0;
     for (key in PlayersOnlline){
-      quantPlayersGeral++;
+      quantPlayers++;
     }
-    return quantPlayersGeral
+    return quantPlayers
   }
 function quantPlayersOn(){
-    quantPlayersOn = 0;
+    var quantPlayers2 = 0;
     for (key in PlayersOnlline){
-      if (PlayersOnlline[key].state != "off"){quantPlayers++;}
+      if (PlayersOnlline[key].state != "off"){quantPlayers2++;}
     }
-    return quantPlayersOn
+    return quantPlayers2
   }
 function lookUserOnlline(nameUser){
     var userAlreadyOnlline = false;
