@@ -655,6 +655,7 @@ function disconectPlayer(){
         console.log(PlayersOnlline[key].nameUser + " encontrado com estado math");
         PlayersOnlline[key].state = "off"
         if ((quantPlayersOn()) > 0){
+          console.log("tag eh: " + PlayersOnlline[key].tag);
           console.log(PlayersOnlline[key].nameUser + " ("+PlayersOnlline[key].id + ") esta desconectado com estado: " + PlayersOnlline[key].state);
           socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
         }else{
