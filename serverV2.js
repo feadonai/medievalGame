@@ -63,6 +63,7 @@ socket.on("NAME_USER", function(pack){
         socket.emit("EXIT_GAME_ERROR",CurrentPlayer);
       }
     }
+    console.log("new user");
   })
 
 socket.on("LOGIN", function(pack){
@@ -122,15 +123,15 @@ socket.on("LOGIN", function(pack){
 
 function quantPlayersGeral(){
     var quantPlayers = 0;
-    for (key in PlayersOnlline){
+    for (key4 in PlayersOnlline){
       quantPlayers++;
     }
     return quantPlayers
   }
 function quantPlayersOn(){
     var quantPlayers2 = 0;
-    for (key in PlayersOnlline){
-      if (PlayersOnlline[key].state != "off"){quantPlayers2++;}
+    for (key3 in PlayersOnlline){
+      if (PlayersOnlline[key3].state != "off"){quantPlayers2++;}
     }
     return quantPlayers2
   }
@@ -653,16 +654,16 @@ function disconectPlayer(){
       if (PlayersOnlline[key].id == CurrentPlayer.id && PlayersOnlline[key].state == "math"){
         console.log(PlayersOnlline[key].nameUser + " encontrado com estado math");
         PlayersOnlline[key].state = "off"
-        if ((quantPlayersOn()) == 0){
+        if ((quantPlayersOn()) > 0){
+          console.log(PlayersOnlline[key].nameUser + " ("+PlayersOnlline[key].id + ") esta desconectado com estado: " + PlayersOnlline[key].state);
+          socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
+        }else{
           stateGame = "off"
           console.log("a sala passa a estar vazia. Deletando tds os players...");
           for (key2 in PlayersOnlline){
             console.log(PlayersOnlline[key2].nameUser + " foi deletado");
             delete PlayersOnlline[key2]
           }
-        }else{
-          console.log(PlayersOnlline[key].nameUser + " ("+PlayersOnlline[key].id + ") esta desconectado com estado: " + PlayersOnlline[key].state);
-          socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
         }
       }else if (PlayersOnlline[key].id == CurrentPlayer.id && (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby")){
         socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
