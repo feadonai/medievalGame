@@ -109,7 +109,7 @@ function isUserOff(userName){
   console.log("on is user off");
   var isOff = false;
   if(stateGame == "math"){
-    console.log("is math");
+    console.log("game in the math");
     for (key in PlayersOnlline){
       if (PlayersOnlline[key].nameUser == userName && PlayersOnlline[key].state == "off"){
         console.log(PlayersOnlline[key].nameUser + " reconectando...");
@@ -126,8 +126,7 @@ function isUserOff(userName){
           nameUser: userName, // ou user: rows[0].user
           state: "math"
         }
-        console.log(userName + "se reconectou na partida: " +PlayersOnlline[socket.id].state);
-        socket.broadcast.emit("PLAYER_RECONECTED_ON_MATH", PlayersOnlline[socket.id])
+        console.log(userName + " se reconectou na partida: " +PlayersOnlline[socket.id].state + "ID: " + CurrentPlayer.id);
         //ver como fazer---------------------------------
         socket.emit("LOGIN_SUCCESS", PlayersOnlline[socket.id]);
         for (key in PlayersOnlline){
@@ -137,7 +136,7 @@ function isUserOff(userName){
         }
         socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[socket.id]);
         //mudar 16 para numero de territoriossss
-          console.log("num territorios 16: " + Territorios[15].numTerritorios);
+        console.log("num territorios eh(16): " + Territorios[15].numTerritorios);
         for (var i = 0; i < Territorios[0].numTerritorios; i ++){
           console.log("num territorios: " + Territorios[i].numTerritorios + " tipo: " + Territorios[i].tipo);
           socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
@@ -434,9 +433,6 @@ function isUserOff(userName){
 
 
   }); //end cliente_solicita_dados. Envia tds os dados de um index para o respectivo cliente
-
-
-
   socket.on("ENVIAR_DADOS_BATALHA", function(pack){
     console.log("on Enviar dadosBatalha.  dados batalha recebido");
     if (Territorios[pack.indexDefesa].tipo == "player"){
@@ -522,9 +518,6 @@ function isUserOff(userName){
     //console.log("ENVIANDO DADOS BATALHA PARA tds  por " + enviarDados.idDe);
 
   });//end socket.on(ENVIAR_DADOS_BATALHA). caço mude territorio envia a todos as mudanças + player sobre derrota
-
-
-
   socket.on("ACTION_MAP", function(pack){
     console.log("Action map number: " + pack.ramdomNumber);
     if (pack.isOn == "true"){
@@ -583,67 +576,49 @@ function isUserOff(userName){
     }
   });//end ACTION_MAP
 
-socket.on("PLAYER_EXIT", function(pack){
+
+//--------------------EXIT GAME---------------------
+  socket.on("PLAYER_EXIT", function(pack){
   disconectPlayer()
-})//end player exit
-
-function disconectPlayer(){
-  console.log("desconectando player: " + socket.id);
-  for (key in PlayersOnlline){
-    console.log(CurrentPlayer.nameUser + " esta sendo desconectado");
-    if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
-      console.log("nome user " + PlayersOnlline[key].nameUser + " id: " + key)
-      quantPlayers = 0;
-      var quantPlayersOn = 0
-      for (key2 in PlayersOnlline){
-        if (PlayersOnlline[key2].state != "off"){
-          console.log(PlayersOnlline[key2].nameUser +" is " + PlayersOnlline[key2].state);
-          quantPlayersOn++
-        }
-      }
-      console.log("nome user " + PlayersOnlline[key].nameUser+ " id: " + key)
-      if (quantPlayersOn <= 1){
-        console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
-        for (key3 in PlayersOnlline){
-          console.log(PlayersOnlline[key3].nameUser + " foi deletado");
-          delete(PlayersOnlline[key3])
-        }
-        stateGame = "off"
-
-        console.log("sala vazia");
-      }else{
-        console.log("nome user " + PlayersOnlline[key].nameUser)
-        PlayersOnlline[key].state = "off"
-        console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state+ " id: " + key);
-        socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
-      }
-    }else if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby")){
-      socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
-      console.log(PlayersOnlline[key].nameUser +" foi deletado no looby");
-      delete PlayersOnlline[key];
-    }
-  }
-}
+  })//end player exit
   socket.on("disconnect", function(){
     disconectPlayer()
-    //roomFull = false;
-    //if (CurrentPlayer.state == "math" || CurrentPlayer.state == "lobby" || CurrentPlayer.state == "pre-lobby"){
-    //  quantPlayers--;
-    //  console.log("Player Onlline: " + quantPlayers);
-    //  for (key in PlayersOnlline){
-    //    if (PlayersOnlline[key].id == socket.id){
-    //      if (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby"){
-    //        socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
-    //      }else if (PlayersOnlline[key].state == "math"){
-    //        socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
-    //      }
-    //      console.log("Player disconnect: "+ PlayersOnlline[key].nameUser + " ESTATE: " + PlayersOnlline[key].state);
-    //      delete PlayersOnlline[key];
-    //    };
-    //  };
-    //}else{console.log(socket.id + " disconected");}
   });//end socket.on(disconnect)
-
+  function disconectPlayer(){
+    console.log("desconectando player: " + socket.id);
+    for (key in PlayersOnlline){
+      if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && PlayersOnlline[key].state == "math"){
+        console.log("nome user " + PlayersOnlline[key].nameUser + " id: " + key + "  esta sendo desconectado")
+        quantPlayers = 0;
+        var quantPlayersOn = 0
+        for (key2 in PlayersOnlline){
+          if (PlayersOnlline[key2].state != "off"){
+            console.log(PlayersOnlline[key2].nameUser +" is " + PlayersOnlline[key2].state);
+            quantPlayersOn++
+          }
+        }
+        if (quantPlayersOn <= 1){
+          console.log("nome user menos 1" + PlayersOnlline[key].nameUser)
+          for (key3 in PlayersOnlline){
+            console.log(PlayersOnlline[key3].nameUser + " foi deletado");
+            delete(PlayersOnlline[key3])
+          }
+          stateGame = "off"
+          console.log("sala vazia");
+        }else{
+          console.log("nome user " + PlayersOnlline[key].nameUser + " is now off")
+          PlayersOnlline[key].state = "off"
+          console.log(PlayersOnlline[key].nameUser + " foi desconectado estado: " + PlayersOnlline[key].state+ " id: " + key);
+          socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
+        }
+      }else if (PlayersOnlline[key].nameUser == CurrentPlayer.nameUser && (PlayersOnlline[key].state == "lobby" || PlayersOnlline[key].state == "pre-lobby")){
+        socket.broadcast.emit("DISCONECTED_PLAYER_ON_LOBBY", PlayersOnlline[key]);
+        console.log(PlayersOnlline[key].nameUser +" foi deletado no looby");
+        delete PlayersOnlline[key];
+      }
+    }
+  }
+  //--------------------END EXIT GAME---------------------
 });//end io.on(concection)
 
 
