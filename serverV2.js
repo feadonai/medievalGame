@@ -586,6 +586,7 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
         bonusProducao: Territorios[pack.indexDefesa].bonusProducao,
         decrescimoProducao: Territorios[pack.indexDefesa].decrescimoProducao
     }
+    console.log("level espiao era " + Territorios[pack.indexDefesa].levelEspiao);
       console.log("enviando dados change territorio");
       socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[pack.indexDefesa]);
     }
