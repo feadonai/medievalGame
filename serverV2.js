@@ -664,6 +664,8 @@ function disconectPlayer(){
           console.log("tag eh: " + PlayersOnlline[key].tag);
           console.log(PlayersOnlline[key].nameUser + " ("+PlayersOnlline[key].id + ") esta desconectado com estado: " + PlayersOnlline[key].state);
           socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
+          PlayersOnlline[key].id = ""
+          CurrentPlayer.id = ""
         }else{
           stateGame = "off"
           console.log("a sala passa a estar vazia. Deletando tds os players...");
