@@ -168,9 +168,11 @@ function isThisUserTryingReconect(userName){
             tag: PlayersOnlline[key].tag
           }
           delete(PlayersOnlline[key])
+          console.log(PlayersOnlline[CurrentPlayer.id].nameUser + " reconectou ID: " + PlayersOnlline[CurrentPlayer.id].id)
           socket.emit("LOGIN_SUCCESS", PlayersOnlline[CurrentPlayer.id]);
           for (key2 in PlayersOnlline){
             if (PlayersOnlline[key2].id != CurrentPlayer.id){
+              console.log(PlayersOnlline[key2].nameUser + " ja esta onlline ID: " + PlayersOnlline[key2].id)
               socket.emit("PLAYER_JOIN", PlayersOnlline[key2]);
             }
           }
@@ -447,7 +449,7 @@ socket.on("TRY_START_GAME", function(pack){
           decrescimoProducao: ""}}}//define territorios dos jogadores
     //fim distribuiçao dos territorios e tags players
     for (var i = 0; i < numTerritorios; i ++){
-      console.log("enviando dados territorios..." + i);
+      //console.log("enviando dados territorios..." + i);
       socket.emit("START_GAME_SUCESS", Territorios[i]);
       socket.broadcast.emit("START_GAME_SUCESS", Territorios[i]);}//enivio dos dados iniciais aos clientes
       stateGame = "math"
