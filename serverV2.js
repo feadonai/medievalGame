@@ -476,7 +476,7 @@ socket.on("DADOS_CLIENTE", function(pack){
       nameUser: pack.nameUser,
       IDuser: pack.IDuser,
       nameTerritorio: pack.nameTerritorio,
-      state: "math",
+      state: pack.state,
 
       a1: pack.a1,
       a2: pack.a2,
@@ -500,7 +500,7 @@ socket.on("DADOS_CLIENTE", function(pack){
 });//end dados clientes. A cada 1 seg os clientes atualizam os dados dos territorios
 
 socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
-    console.log(" on CLIENTE_SOLICITA_DADOS");
+    console.log(CurrentPlayer.nameUser + " solicita dados do territorio " + pack.index + " q eh do " + Territorios[pack.index].nameUser);
     if (Territorios[pack.index].index == pack.index){
       console.log("enviando dados sobre o territorio " + Territorios[pack.index].index);
       socket.emit("CLIENTE_RECEBE_DADOS", Territorios[pack.index]);
