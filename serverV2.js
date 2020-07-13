@@ -568,7 +568,7 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
         nameUser: Territorios[pack.indexAtaque].nameUser,
         IDuser: Territorios[pack.indexAtaque].IDuser,
         nameTerritorio: pack.newNameTerritorio,
-        state: "math",
+        state: Territorios[pack.indexAtaque].state,
         a1: pack.a1,
         a2: pack.a2,
         d1: pack.d1,
