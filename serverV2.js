@@ -124,7 +124,7 @@ socket.on("LOGIN", function(pack){
 function quantPlayersGeral(){
     var quantPlayers = 0;
     for (key4 in PlayersOnlline){
-      console.log(CurrentPlayer.name + "..." + CurrentPlayer.id)
+      console.log(PlayersOnlline[key4].name + "..." + PlayersOnlline[key4].id)
       quantPlayers++;
     }
     return quantPlayers
