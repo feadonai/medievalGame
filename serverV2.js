@@ -124,6 +124,7 @@ socket.on("LOGIN", function(pack){
 function quantPlayersGeral(){
     var quantPlayers = 0;
     for (key4 in PlayersOnlline){
+      console.log(CurrentPlayer.name + "..." + CurrentPlayer.id)
       quantPlayers++;
     }
     return quantPlayers
@@ -175,10 +176,10 @@ function isThisUserTryingReconect(userName){
           }
           socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[CurrentPlayer.id]);
           for (var i = 0; i < Territorios[0].numTerritorios; i ++){
-            console.log("territorio[" + Territorios[i].numTerritorios + "] tipo: " + Territorios[i].tipo + " pos = " + Territorios[i].index);
+            //console.log("territorio[" + Territorios[i].numTerritorios + "] tipo: " + Territorios[i].tipo + " pos = " + Territorios[i].index);
             socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
           }
-          console.log(userName + " reconectado com sucesso");
+          console.log(userName + " reconectado com sucesso id: " + CurrentPlayer.id);
         }
       }
     }
