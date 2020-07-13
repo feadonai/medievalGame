@@ -124,7 +124,7 @@ socket.on("LOGIN", function(pack){
 function quantPlayersGeral(){
     var quantPlayers = 0;
     for (key4 in PlayersOnlline){
-      console.log(PlayersOnlline[key4].name + "..." + PlayersOnlline[key4].id)
+      console.log(PlayersOnlline[key4].nameUser + "..." + PlayersOnlline[key4].id)
       quantPlayers++;
     }
     return quantPlayers
@@ -179,6 +179,10 @@ function isThisUserTryingReconect(userName){
           socket.broadcast.emit("RECONECTED_PLAYER_ON_MATH", PlayersOnlline[CurrentPlayer.id]);
           for (var i = 0; i < Territorios[0].numTerritorios; i ++){
             //console.log("territorio[" + Territorios[i].numTerritorios + "] tipo: " + Territorios[i].tipo + " pos = " + Territorios[i].index);
+            if (Territorios[i].nameUser == PlayersOnlline[CurrentPlayer.id].nameUser){
+              Territorios[i].IDuser = PlayersOnlline[CurrentPlayer.id].id
+              Territorios[i].state = PlayersOnlline[CurrentPlayer.id].state
+            }
             socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
           }
           console.log(userName + " reconectado com sucesso id: " + CurrentPlayer.id);
@@ -666,9 +670,17 @@ function disconectPlayer(){
         if ((quantPlayersOn()) > 0){
           console.log("tag eh: " + PlayersOnlline[key].tag);
           console.log(PlayersOnlline[key].nameUser + " ("+PlayersOnlline[key].id + ") esta desconectado com estado: " + PlayersOnlline[key].state);
-          socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
           PlayersOnlline[key].id = ""
           CurrentPlayer.id = ""
+          socket.broadcast.emit("DISCONECTED_PLAYER_ON_MATH", PlayersOnlline[key]);
+          for (var i = 0; i < Territorios[0].numTerritorios; i ++){
+            //console.log("territorio[" + Territorios[i].numTerritorios + "] tipo: " + Territorios[i].tipo + " pos = " + Territorios[i].index);
+            if (Territorios[i].nameUser == PlayersOnlline[key].nameUser){
+              Territorios[i].IDuser = PlayersOnlline[key].id
+              Territorios[i].state = PlayersOnlline[key].state
+            }
+            socket.emit("LOGIN_SUCCESS_MATH", Territorios[i]);
+          }
         }else{
           stateGame = "off"
           console.log("a sala passa a estar vazia. Deletando tds os players...");
