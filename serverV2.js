@@ -510,7 +510,7 @@ socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
 socket.on("ENVIAR_DADOS_BATALHA", function(pack){
     console.log("on Enviar dadosBatalha.  dados batalha recebido. isCapruta:  " + pack.isCaptura + " isVitoria: " + pack.isVitoria);
     console.log("defensor " + Territorios[pack.indexDefesa].nameUser + "(" + Territorios[pack.indexDefesa].nameTerritorio + ") tag user: " + Territorios[pack.indexDefesa].tagUser + " tag terr: " + Territorios[pack.indexDefesa].tag);
-    console.log("atacante " + Territorios[pack.indexAtaque].nameUser + "(" + Territorios[pack.indexAtaque].nameTerritorio + ") tag user: " + Territorios[pack.indexAtaque].tagUser + " tag terr: " + Territorios[pack.indexAtaque].tag);
+    console.log("atacante " + PlayersOnlline[pack.idAtacante].nameUser + "(" + pack.nameAtacante + ") tag user: " + pack.tagUser + " tag terr: " + pack.tag);
     if (Territorios[pack.indexDefesa].tipo == "player"){
       console.log("batalha em player:");
       console.log("defensor: " + Territorios[pack.indexDefesa].nameUser);
@@ -521,8 +521,8 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
         indexAtaque: pack.indexAtaque,
         isCaptura: pack.isCaptura,
         isVitoria: pack.isVitoria,
-        nameUserAtacante : Territorios[pack.indexAtaque].nameUser,
-        nameAtacante : Territorios[pack.indexAtaque].nameTerritorio,
+        nameUserAtacante : PlayersOnlline[pack.idAtacante].nameUser,
+        nameAtacante : pack.nameAtacante,
         attackPower : pack.attackPower,
         a1Ant : pack.a1Ant,
         a2Ant : pack.a2Ant,
@@ -543,21 +543,21 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
       var newTag;
       if (Territorios[pack.indexDefesa].tipo == "bot"){
         if (Territorios[pack.indexDefesa].tag == "semDono"){
-          newTag = Territorios[pack.indexAtaque].tagUser;
+          newTag = pack.tagUser;
         }else if (Territorios[pack.indexDefesa].tag == "fazenda"){
-          if (Territorios[pack.indexAtaque].tagUser == "player1"){
+          if (pack.tagUser == "player1"){
             newTag = "fazendaPlayer1"
-          }else if (Territorios[pack.indexAtaque].tagUser == "player2"){
+          }else if (pack.tagUser == "player2"){
             newTag = "fazendaPlayer2"
           }
         }
       }else if (Territorios[pack.indexDefesa].tipo == "player"){
         if (Territorios[pack.indexDefesa].tag == "player1" || Territorios[pack.indexDefesa].tag == "player2"){
-          newTag = Territorios[pack.indexAtaque].tagUser;
+          newTag = pack.tagUser;
         }else if (Territorios[pack.indexDefesa].tag == "fazendaPlayer1" || Territorios[pack.indexDefesa].tag == "fazendaPlayer2"){
-          if (Territorios[pack.indexAtaque].tagUser == "player1"){
+          if (pack.tagUser == "player1"){
             newTag = "fazendaPlayer1"
-          }else if (Territorios[pack.indexAtaque].tagUser == "player2"){
+          }else if (pack.tagUser == "player2"){
             newTag = "fazendaPlayer2"
           }
         }
@@ -568,11 +568,11 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
         tipo: "player",
         index: Territorios[pack.indexDefesa].index,
         tag: newTag,
-        tagUser: Territorios[pack.indexAtaque].tagUser,
-        nameUser: Territorios[pack.indexAtaque].nameUser,
-        IDuser: Territorios[pack.indexAtaque].IDuser,
+        tagUser: pack.tagUser,
+        nameUser: PlayersOnlline[pack.idAtacante].nameUser,
+        IDuser: pack.idAtacante,
         nameTerritorio: pack.newNameTerritorio,
-        state: Territorios[pack.indexAtaque].state,
+        state: PlayersOnlline[pack.idAtacante].state,
         a1: pack.a1,
         a2: pack.a2,
         d1: pack.d1,
