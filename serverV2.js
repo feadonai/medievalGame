@@ -509,8 +509,12 @@ socket.on("CLIENTE_SOLICITA_DADOS", function(pack){
 
 socket.on("ENVIAR_DADOS_BATALHA", function(pack){
     console.log("on Enviar dadosBatalha.  dados batalha recebido. isCapruta:  " + pack.isCaptura + " isVitoria: " + pack.isVitoria);
+    console.log("defensor " + Territorios[pack.indexDefesa].nameUser + "(" + Territorios[pack.indexDefesa].nameTerritorio + ") tag user: " + Territorios[pack.indexDefesa].tagUser + " tag terr: " + Territorios[pack.indexDefesa].tag);
+    console.log("atacante " + Territorios[pack.indexAtaque].nameUser + "(" + Territorios[pack.indexAtaque].nameTerritorio + ") tag user: " + Territorios[pack.indexAtaque].tagUser + " tag terr: " + Territorios[pack.indexAtaque].tag);
     if (Territorios[pack.indexDefesa].tipo == "player"){
-      console.log("batalha em player");
+      console.log("batalha em player:");
+      console.log("defensor: " + Territorios[pack.indexDefesa].nameUser);
+      console.log("atacante: " + Territorios[pack.indexAtaque].nameUser);
       var enviarDados = {
         idPara: Territorios[pack.indexDefesa].IDuser,
         indexDefesa: pack.indexDefesa,
@@ -586,6 +590,8 @@ socket.on("ENVIAR_DADOS_BATALHA", function(pack){
         bonusProducao: Territorios[pack.indexDefesa].bonusProducao,
         decrescimoProducao: Territorios[pack.indexDefesa].decrescimoProducao
     }
+
+    console.log("agr defensor virou de " + Territorios[pack.indexDefesa].nameUser + "(" + Territorios[pack.indexDefesa].nameTerritorio + ") tag user: " + Territorios[pack.indexDefesa].tagUser + " tag terr: " + Territorios[pack.indexDefesa].tag);
     console.log("level espiao era " + Territorios[pack.indexDefesa].levelEspiao);
       console.log("enviando dados change territorio");
       socket.broadcast.emit("CHANGE_TERRITORIO", Territorios[pack.indexDefesa]);
