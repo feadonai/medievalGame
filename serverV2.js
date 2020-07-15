@@ -604,8 +604,8 @@ socket.on("ACTION_MAP", function(pack){
     console.log("Action map number: " + pack.ramdomNumber);
     if (pack.isOn == "true"){
       Ataques[pack.ramdomNumber] = {
-        nameUserAtaque: Territorios[pack.indexAtaque].nameUser,
-        nameTerritorioAtaque: Territorios[pack.indexAtaque].nameTerritorio,
+        nameUserAtaque: PlayersOnlline[pack.idAtacante].nameUser,
+        nameTerritorioAtaque: pack.nameAtacante,
         IDdefesa: Territorios[pack.indexDefesa].IDuser,
         indexAtaque: pack.indexAtaque,
         indexDefesa: pack.indexDefesa,
@@ -632,8 +632,8 @@ socket.on("ACTION_MAP", function(pack){
       delete Ataques[pack.ramdomNumber];
       console.log(pack.ramdomNumber + "enviado como fim");
       var dadosFimAtaque = {
-        nameUserAtaque: Territorios[pack.indexAtaque].nameUser,
-        nameTerritorioAtaque: Territorios[pack.indexAtaque].nameTerritorio,
+        nameUserAtaque: PlayersOnlline[pack.idAtacante].nameUser,
+        nameTerritorioAtaque: pack.nameAtacante,
         IDdefesa: Territorios[pack.indexDefesa].IDuser,
         indexAtaque: pack.indexAtaque,
         indexDefesa: pack.indexDefesa,
